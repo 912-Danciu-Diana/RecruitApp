@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>CV - {{ user.get_full_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        h2 {
+            font-size: 20px;
+            color: #666;
+        }
+        p, ul {
+            color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #f0f0f0;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ user.get_full_name }}</h1>
+    <p>Email: {{ user.email }}</p>
+
+    {% if user.profile_description %}
+    <h2>Profile Description</h2>
+    <p>{{ user.profile_description }}</p>
+    {% endif %}
+
+    {% if user.school %}
+    <h2>School</h2>
+    <p>{{ user.school }}</p>
+    {% endif %}
+
+    {% if user.university %}
+    <h2>University</h2>
+    <p>{{ user.university }}</p>
+    {% endif %}
+
+    {% if user.work_experience %}
+    <h2>Work Experience</h2>
+    <p>{{ user.work_experience }}</p>
+    {% endif %}
+
+    {% if skills %}
+    <h2>Skills</h2>
+    <ul>
+        {% for skill in skills %}
+            <li>{{ skill.name }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
