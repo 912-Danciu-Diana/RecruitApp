@@ -9,7 +9,7 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name')
 
 
 @admin.register(JobSkills)
