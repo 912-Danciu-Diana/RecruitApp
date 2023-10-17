@@ -9,12 +9,12 @@ class InterviewAdmin(admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('question',)
+    list_display = ('id', 'question',)
 
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('question', 'answer', 'is_correct')
+    list_display = ('id', 'question', 'answer', 'is_correct')
 
 
 @admin.register(QuizQuestion)
