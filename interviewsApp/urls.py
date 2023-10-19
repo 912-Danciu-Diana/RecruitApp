@@ -3,7 +3,7 @@ from .views import (
     InterviewListView, InterviewDetailView,
     QuestionListView, QuestionDetailView,
     AnswerListView, AnswerDetailView,
-    QuizQuestionListView, QuizQuestionDetailView, generate_quiz_api
+    QuizQuestionListView, QuizQuestionDetailView, generate_quiz_api, UsersAnswerListView, UsersAnswerDetailView
 )
 
 urlpatterns = [
@@ -16,4 +16,6 @@ urlpatterns = [
     path('api/quizquestions/', QuizQuestionListView.as_view(), name='api_quizquestions_list'),
     path('api/quizquestions/<int:pk>/', QuizQuestionDetailView.as_view(), name='api_quizquestion_detail'),
     path('api/generate_quiz/', generate_quiz_api, name='api_generate_quiz'),
+    path('api/users_answer/', UsersAnswerListView.as_view(), name='api_users_answer_list'),
+    path('api/users_answer/<int:pk>/', UsersAnswerDetailView.as_view(), name='api_users_answer_detail'),
 ]

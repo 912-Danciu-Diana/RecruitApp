@@ -5,10 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .generate_ai_quiz import generate_quiz, parse_quiz
-from .models import Interview, Question, Answer, QuizQuestion
+from .models import Interview, Question, Answer, QuizQuestion, UsersAnswer
 from .serializers import (
     InterviewSerializer, QuestionSerializer,
-    AnswerSerializer, QuizQuestionSerializer
+    AnswerSerializer, QuizQuestionSerializer, UsersAnswerSerializer
 )
 
 
@@ -69,3 +69,12 @@ def generate_quiz_api(request):
         saved_questions.append(question_obj.id)
 
     return Response({"question_ids": saved_questions}, status=status.HTTP_201_CREATED)
+
+
+class UsersAnswerListView(generics.ListCreateAPIView):
+    queryset = UsersAnswer.objects.all()
+    serializer_class = UsersAnswerSerializer
+
+class UsersAnswerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = UsersAnswer.objects.all()
+    serializer_class = UsersAnswerSerializer
