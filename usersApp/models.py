@@ -4,6 +4,8 @@ from django.db import models
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    cover_photo = models.ImageField(upload_to='cover_photos/', null=True, blank=True)
 
     class Meta:
         db_table = 'auth_user'
