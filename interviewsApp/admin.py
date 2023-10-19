@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Interview, Question, Answer, QuizQuestion
+from .models import Interview, Question, Answer, QuizQuestion, UsersAnswer
 
 
 @admin.register(Interview)
@@ -20,3 +20,8 @@ class AnswerAdmin(admin.ModelAdmin):
 @admin.register(QuizQuestion)
 class QuizQuestionAdmin(admin.ModelAdmin):
     list_display = ('quiz_interview', 'question')
+
+
+@admin.register(UsersAnswer)
+class UsersAnswerAdmin(admin.ModelAdmin):
+    list_display = ('quiz_question', 'answer', 'is_correct')

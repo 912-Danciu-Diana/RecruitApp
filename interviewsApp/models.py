@@ -57,3 +57,21 @@ class QuizQuestion(models.Model):
     def __str__(self):
         return str(self.quiz_interview) + "\n" + str(self.question)
 
+
+class UsersAnswer(models.Model):
+    quiz_question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    is_correct = models.BooleanField()
+
+    def clean(self):
+        valid_answers = [a for a in self.quiz_question.question.answer_set.all()]
+        if self.answer not in valid_answers:
+            raise ValidationError(
+                'The provided answer does not correspond to one of the valid answers for the chosen quiz question.')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Answer for {self.quiz_question}: {self.answer} \n is_correct: {self.is_correct}"

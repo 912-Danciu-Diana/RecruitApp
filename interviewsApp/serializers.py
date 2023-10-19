@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Interview, Question, Answer, QuizQuestion
+from .models import Interview, Question, Answer, QuizQuestion, UsersAnswer
 
 
 class InterviewSerializer(serializers.ModelSerializer):
@@ -24,3 +24,9 @@ class QuizQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizQuestion
         fields = ['quiz_interview', 'question']
+
+
+class UsersAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsersAnswer
+        fields = '__all__'
