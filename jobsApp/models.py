@@ -7,6 +7,9 @@ class Job(models.Model):
     company = models.ForeignKey('companiesApp.Company', on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     cover_photo = models.ImageField(upload_to='cover_photos/', null=True, blank=True)
+    location = models.ForeignKey('locations.Location', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
+    is_remote = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return self.name

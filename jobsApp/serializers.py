@@ -5,7 +5,7 @@ from .models import Job, Skill, JobSkills
 class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
-        fields = ['name', 'description', 'company']
+        fields = ['name', 'company', 'description', 'profile_pic', 'cover_photo', 'location', 'is_remote']
 
 
 class SkillSerializer(serializers.ModelSerializer):

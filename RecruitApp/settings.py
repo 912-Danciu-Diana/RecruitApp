@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'interviewsApp',
     'rest_framework.authtoken',
     'cvGenerator',
+    'locations',
 ]
 
 MIDDLEWARE = [
