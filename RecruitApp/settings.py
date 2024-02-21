@@ -144,3 +144,6 @@ REST_FRAMEWORK = {
 }
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', 'default_value')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

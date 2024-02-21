@@ -9,9 +9,10 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(RecruiteeUser)
 class RecruiteeUserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'cv', 'profile_description', 'school', 'university', 'work_experience')
+    list_display = ('id', 'username', 'email', 'cv', 'profile_description', 'school', 'university', 'work_experience',
+                    'profile_pic', 'cover_photo')
 
 
 @admin.register(CompanyUser)
 class CompanyUserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'company')
+    list_display = ('id', 'username', 'email', 'company', 'profile_pic', 'cover_photo')
