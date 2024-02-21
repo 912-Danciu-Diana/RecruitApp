@@ -10,16 +10,21 @@ class JobListView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Job.objects.all()
         search_term = self.request.query_params.get('search', None)
+
         if search_term:
-            name_location_filtered = queryset.filter(
-                Q(name__icontains=search_term) |
-                Q(location__city__icontains=search_term) |
-                Q(location__country__icontains=search_term)
-            )
-            skill_jobs = JobSkills.objects.filter(skill__name__icontains=search_term).values_list('job', flat=True)
-            skills_filtered = queryset.filter(id__in=skill_jobs)
-            combined_queryset = (name_location_filtered | skills_filtered).distinct()
-            return combined_queryset
+            if search_term.lower() == 'remote':
+                queryset = queryset.filter(is_remote=True)
+            else:
+                name_location_filtered = queryset.filter(
+                    Q(name__icontains=search_term) |
+                    Q(location__city__icontains=search_term) |
+                    Q(location__country__icontains=search_term)
+                )
+                skill_jobs = JobSkills.objects.filter(skill__name__icontains=search_term).values_list('job', flat=True)
+                skills_filtered = queryset.filter(id__in=skill_jobs)
+                combined_queryset = (name_location_filtered | skills_filtered).distinct()
+                queryset = combined_queryset
+
         return queryset
 
 
