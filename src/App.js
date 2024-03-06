@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LoginScreen from './screens/LoginScreen';
+import UserProfileScreen from './screens/UserProfileScreen';
+import AuthContextProvider from './contexts/AuthContext';
+import RegisterRecruiteeScreen from './screens/RegisterRecruiteeScreen';
+import SearchScreen from './screens/SearchScreen';
+import JobProfile from './screens/JobProfile';
+import CompanyProfile from './screens/CompanyProfile';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContextProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginScreen />} />
+          <Route path="/userprofile" element={<UserProfileScreen />} />
+          <Route path="/register-recruitee" element={<RegisterRecruiteeScreen />} />
+          <Route path="/search" element={<SearchScreen />} />
+          <Route path="/jobprofile" element={<JobProfile />} />
+          <Route path="/companyprofile" element={<CompanyProfile />} />
+        </Routes>
+      </Router>
+    </AuthContextProvider>
   );
 }
 
