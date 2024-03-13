@@ -7,6 +7,7 @@ import RegisterRecruiteeScreen from './screens/RegisterRecruiteeScreen';
 import SearchScreen from './screens/SearchScreen';
 import JobProfile from './screens/JobProfile';
 import CompanyProfile from './screens/CompanyProfile';
+import RecruiterProfileScreen from './screens/RecruiterProfileScreen';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/search" element={<SearchScreen />} />
           <Route path="/jobprofile" element={<JobProfile />} />
           <Route path="/companyprofile" element={<CompanyProfile />} />
+          <Route path="/recruiterprofile" element={<RecruiterProfileScreen />} />
         </Routes>
       </Router>
     </AuthContextProvider>

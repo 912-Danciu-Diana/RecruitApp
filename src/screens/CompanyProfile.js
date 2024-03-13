@@ -6,7 +6,7 @@ const CompanyProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { company } = location.state || {};
-    const { jobs, searchForJobs } = useContext(AuthContext);
+    const { jobs, searchForJobs, profile } = useContext(AuthContext);
 
     useEffect(() => {
         async function getJobs() {
@@ -14,6 +14,14 @@ const CompanyProfile = () => {
         }
         getJobs();
     });
+
+    const handleBackNavigation = () => {
+        if('university' in profile) {
+            navigate(`/search`);
+        } else {
+            navigate(`/recruiterprofile`)
+        }
+    }
 
     const profileStyles = {
         container: {
@@ -176,7 +184,7 @@ const CompanyProfile = () => {
                     </div>
                 ))}
                 </div>
-                <button onClick={() => navigate(`/search`)} style={profileStyles.button}>Back to search</button>
+                <button onClick={() => handleBackNavigation()} style={profileStyles.button}>Back</button>
             </div>
         </div>
     );

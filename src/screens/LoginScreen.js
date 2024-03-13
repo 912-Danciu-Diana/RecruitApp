@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
@@ -21,12 +21,19 @@ const CustomTextField = styled(TextField)({
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useContext(AuthContext);
+  const { login, profile } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(profile && 'university' in profile) {
+      navigate('/userprofile');
+    } else if(profile) {
+      navigate('/recruiterprofile');
+    }
+  }, [profile, navigate]);
 
   const handleLogin = async () => {
     await login({ username, password });
-    navigate('/userprofile');
   };
 
   const styles = {

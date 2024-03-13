@@ -109,7 +109,7 @@ const UserProfileScreen = () => {
             padding: '10px',
             border: '1px solid #ddd',
             borderRadius: '5px',
-            width: 'calc(100% - 22px)', // Adjust based on padding + border
+            width: 'calc(100% - 22px)',
             marginBottom: '20px',
         },
         button: {
