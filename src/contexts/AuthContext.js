@@ -132,12 +132,11 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
-  const addCV = async () => {
+  const addCV = async (formData) => {
     try {
-      console.log("adding cv..");
       const token = localStorage.getItem('token');
-      await updateUserCV(token, downloadCvURL);
-      console.log(downloadCvURL);
+      await updateUserCV(token, formData);
+      console.log("CV added successfully.");
     } catch (error) {
       console.error("Adding CV failed:", error);
     }

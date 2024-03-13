@@ -1,7 +1,22 @@
 import React, { useContext, useState } from 'react';
+import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import PersonIcon from '@mui/icons-material/Person';
+import LockIcon from '@mui/icons-material/Lock';
+import loginImg from '../assets/login-img.webp'
+
+const CustomTextField = styled(TextField)({
+  '& label.Mui-focused': {
+    color: '#000',
+  },
+  '& .MuiInput-underline:after': {
+    borderBottomColor: '#000',
+  }
+});
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -15,67 +30,107 @@ const LoginScreen = () => {
   };
 
   const styles = {
-    container: {
+    loginContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      width: '100vw',
+      overflow: 'clip',
+      fontFamily: 'Helvetica'
+    },
+    formContainer: {
+      height: '100%',
+      width: '50%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh',
-      background: 'linear-gradient(to right, #6a11cb 0%, #2575fc 100%)',
+      gap: '1.2em',
+      padding: '0 12%'
     },
+    imageContainer: {
+      height: '100%',
+      width: '50%',
+      minWidth: '50%',
+      display: 'flex',
+      position: 'relative'
+    },
+    imageOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      height: '100%',
+      width: '50%',
+      background: 'linear-gradient(90deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%)',
+      display: 'block'
+    },
+    inputContainer: {
+      width: "100%",
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      gap: '0.5em'
+    },
+
     input: {
-      margin: '5px',
-      padding: '10px',
-      border: 'none',
-      borderBottom: '2px solid #333', // Assuming a style based on your screenshot
-      background: 'transparent',
-      outline: 'none',
+      width: '100%'
     },
+
     button: {
-      margin: '10px',
-      padding: '10px 20px',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer',
-      background: '#333',
-      color: 'white',
-      fontSize: '1em',
+      width: '100%',
+      background: '#000',
+      textTransform: 'none',
+      marginTop: '1em'
     },
+
+    icon: {
+      width: '1.2em',
+      height: '1.2em',
+      marginBottom: '0.2em'
+    },
+
+    registerContainer: {
+      marginTop: "2em",
+      fontSize: '0.8em',
+      display: 'flex',
+      gap: '0.8em'
+    },
+
     link: {
-      marginTop: '20px',
-    },
-    linktext: {
-      color: 'black',
+      textDecoration: 'none',
+      fontWeight: 'bold',
+      color: '#000'
     }
+
+
   };
 
   return (
-    <div style={styles.container}>
-      <h2>Welcome</h2>
-      <div>
-        <input
-          style={styles.input}
-          placeholder="Username"
-          onChange={e => setUsername(e.target.value)}
-          value={username}
-        />
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAO5JREFUSEvVldENwjAMRK+bwCTAJjAJMAlsApsAkwCHEtS6jm0ligSWqvaj9bPPznVA5xg650cUsACwB7B9X3cAVwDH9GzWGAGsAVyULATtEqwIiQBuANiBFoQsrRY8ACU5OXPaWF14gEPS3mJwFnxPDQ9Q0n+cjHM41wKoPQfcbQYszOrC1J8fexLlzvM5IIyRV5T35nPg5fhtANdvleYgK82W8ahZU2rNA1baHg2m2oY25Mjul3SfbZUGsLzHG/jMmyQgYg0eZGIdEkDdaXAtwX8FpfqEBLTIk3NOZJKAZ0vpo2+/eaNWUc39f8ALCDsoGfKFTMgAAAAASUVORK5CYII=" />
+    <div style={styles.loginContainer}>
+      <div style={styles.formContainer}>
+        <h2>Welcome</h2>
+        <div style={styles.inputContainer}>
+          <PersonIcon style={styles.icon}></PersonIcon>
+          <CustomTextField style={styles.input} variant='standard' label='Username' value={username} onChange={(event) => setUsername(event.target.value)} />
+        </div>
+        <div style={styles.inputContainer}>
+          <LockIcon style={styles.icon}></LockIcon>
+          <CustomTextField style={styles.input} variant='standard' label='Password' type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        </div>
+        <Button style={styles.button} variant="contained" onClick={handleLogin}>Login</Button>
+        <div style={styles.registerContainer}>
+          Don't have an account as a recruitee already?
+          <Link to="/register-recruitee" style={styles.link}>Register here</Link>
+        </div>
       </div>
-      <div>
-        <input
-          style={styles.input}
-          placeholder="Password"
-          onChange={e => setPassword(e.target.value)}
-          value={password}
-          type="password"
-        />
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAANNJREFUSEvtld0NwiAUhU830U10EnUSdRLdRDfRTdQvgcTG2x7ANH0pLy0Bznd/odPEo5tYX6WAjaSdJL6Mp6TzZ353BpYA9pIuA0JATmMQB8DiWxJA7Jr+geLRStI6eRRyHABxIJGlWH5M0MOQFw7wSgejfVj/SNbjRZMHYwAE3bqtIifg1ucBkFSSl2velXpepyd+eiNKHokjgS0DyPb7YATIcW0BcKanuQCiMC4hssU1f4j+aTReut7NGvUBVwQvWG03F18VNsg1G9yDU6MV7n0DDfwoGYxA/o8AAAAASUVORK5CYII=" />
+      <div style={styles.imageContainer}>
+        <img src={loginImg} alt="loginImg" />
+        <div style={styles.imageOverlay}></div>
       </div>
-      <button style={styles.button} onClick={handleLogin}>Login</button>
-      <div style={styles.link}>
-        Don't have an account as a recruitee already?
-        <Link to="/register-recruitee" style={styles.linktext}> Register here</Link>
-      </div>
+
+
     </div>
   );
 };

@@ -1,18 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import SkillSearchComponent from './SkillSearchComponent';
 
 const UserProfileScreen = () => {
-    const { profile, logout, searchForCompanies, searchForJobs, authenticatedUserSkills, generateCV, downloadCvURL, addCV } = useContext(AuthContext);
+    const { profile, userToken, logout, searchForCompanies, searchForJobs, authenticatedUserSkills, generateCV, downloadCvURL, addCV } = useContext(AuthContext);
     const navigate = useNavigate();
     const [companySearchTerm, setCompanySearchTerm] = useState('');
     const [jobSearchTerm, setJobSearchTerm] = useState('');
     const [isAddingSkill, setIsAddingSkill] = useState(false);
 
-    if (!profile) {
-        return <div>Loading...</div>;
-    }
+    useEffect(() => {
+        if (!userToken) {
+            navigate("/");
+        }
+    });
 
     const handleAddSkillClick = () => {
         setIsAddingSkill(true);
@@ -39,13 +41,20 @@ const UserProfileScreen = () => {
 
     const handleGenerateAndDownloadCV = async () => {
         await generateCV();
-        
     }
 
-    const handleAddCV = async () => {
-        console.log("adding 1");
-        await addCV();
-        console.log("adding 2");
+    const handleAddCV = async (event) => {
+        event.preventDefault();
+        const fileInput = document.getElementById("cvFile");
+        const formData = new FormData();
+        if(fileInput.files.length > 0) {
+            formData.append('cv', fileInput.files[0]);
+            await addCV(formData);
+            console.log("CV uploaded successfully");
+            window.location.reload()
+        } else {
+            console.error("No file selected");
+        }
     }
 
     const profileStyles = {
@@ -120,7 +129,8 @@ const UserProfileScreen = () => {
     };
 
     return (
-        <div style={profileStyles.container}>
+        (profile && (
+            <div style={profileStyles.container}>
             <img
                 src={`http://127.0.0.1:8080${profile.cover_photo_url}`}
                 alt={`${profile.username}'s cover`}
@@ -167,7 +177,10 @@ const UserProfileScreen = () => {
                     {downloadCvURL && (
                         <div>
                             <div><strong>Generated CV: </strong><a href={downloadCvURL} download="Your_CV.pdf">Download CV</a></div>
-                            <button onClick={handleAddCV} style={profileStyles.button}>Add CV</button>
+                            <form id="cvForm" onSubmit={handleAddCV}>
+                                <input type="file" id="cvFile" name="cv" accept=".pdf" required />
+                                <input type="submit" value="Upload" />
+                            </form>
                         </div>
                     )}
                     {profile.profile_description && <p><strong>About Me:</strong> {profile.profile_description}</p>}
@@ -190,6 +203,7 @@ const UserProfileScreen = () => {
                 <button onClick={handleLogout} style={profileStyles.button}>Logout</button>
             </div>
         </div>
+        ))
     );
 };
 

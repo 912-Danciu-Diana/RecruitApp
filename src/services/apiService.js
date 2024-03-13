@@ -141,6 +141,7 @@ export const generateUserCV = async (token) => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+        console.log(response);
         return await response.blob();
     } catch (error) {
         console.error("Generating CV failed: ", error);
@@ -148,20 +149,14 @@ export const generateUserCV = async (token) => {
     }
 }
 
-export const updateUserCV = async (token, blob) => {
+export const updateUserCV = async (token, formData) => {
     try {
-
-        const file = new File([blob], "cv.pdf", { type: blob.type });
-
-        let formData = new FormData();
-        formData.append('cv', file);
-
         const response = await fetch(`${baseURL}/usersApp/api/user/update_cv/`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Token ${token}`
             },
-            body: formData  
+            body: formData,  
         });
 
         if (!response.ok) {
