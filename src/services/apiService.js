@@ -169,3 +169,216 @@ export const updateUserCV = async (token, formData) => {
         throw error;
     }
 };
+
+export const applyForJob = async(token, jobId) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/add_application/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify({job: jobId}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Applying to job failed: ", error);
+        throw error;
+    }
+}
+
+export const findApplication = async(jobId, userId) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/find_application/?job=${jobId}&user=${userId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Finding application failed: ", error);
+        throw error;
+    }
+}
+
+export const getApplicationForJob = async(jobId, userId) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/get_application/?job=${jobId}&user=${userId}`)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Data received:', data);
+        return data;
+    } catch (error) {
+        console.error("Getting application failed: ", error);
+        throw error;
+    }
+}
+
+export const getApplicantsForJob = async(jobId) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/get_job_applicants/?job=${jobId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Getting applicants for job failed: ", error);
+        throw error;
+    }
+}
+
+export const fetchUserSkills = async (userId) => {
+    try {
+        const response = await fetch(`${baseURL}/cv/userskillsunauthenticated/?recruitee=${userId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Fetching user's skills failed: ", error);
+        throw error;
+    }
+}
+
+export const acceptOrRejectApplicantForQuiz = async (token, jobId, applicantId, flag) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/update_application/?job=${jobId}&user=${applicantId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify({acceptedForQuiz: flag}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Accept candidate for quiz failed:", error);
+        throw error;
+    }
+}
+
+export const postQuiz = async(token, jobId, applicantId) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/make_quiz/?job=${jobId}&recruitee=${applicantId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Posting quiz failed:", error);
+        throw error;
+    }
+}
+
+export const postQuestion = async(question) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/questions/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({question: question}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Posting question failed:", error);
+        throw error;
+    }
+}
+
+export const postQuizQuestion = async(quizInterview, question) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/quizquestions/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({quiz_interview: quizInterview, question_id: question}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Posting quiz question failed:", error);
+        throw error;
+    }
+}
+
+export const postAnswer = async(answer, flag, question) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/answers/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({answer: answer, is_correct: flag, question: question}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Posting answer failed:", error);
+        throw error;
+    }
+}
+
+export const checkInterviewExists = async(job, recruitee) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/check_interview_exists/?job=${job}&recruitee=${recruitee}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Check interview exists failed:", error);
+        throw error;
+    }
+}
+
+export const getInterview = async(interview) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/interviews/${interview}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Get interview failed:", error);
+        throw error;
+    }
+}
+
+export const postUsersAnswer = async(quizquestion, answer, flag) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/users_answer/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({quiz_question: quizquestion, answer: answer, is_correct: flag}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Post users answer failed: ", error);
+        throw error;
+    }
+}

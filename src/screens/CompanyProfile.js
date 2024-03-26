@@ -15,8 +15,16 @@ const CompanyProfile = () => {
         getJobs();
     });
 
+    const handleJobNavigation = (job) => {
+        if ('university' in profile) {
+            navigate(`/jobprofile`, { state: { job } });
+        } else {
+            navigate('/recruiterjobprofile', { state: { job } })
+        }
+    }
+
     const handleBackNavigation = () => {
-        if('university' in profile) {
+        if ('university' in profile) {
             navigate(`/search`);
         } else {
             navigate(`/recruiterprofile`)
@@ -108,6 +116,7 @@ const CompanyProfile = () => {
             padding: '15px',
             borderRadius: '10px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            cursor: 'pointer',
         },
         profilePic: {
             width: '50px',
@@ -175,14 +184,14 @@ const CompanyProfile = () => {
                 <div style={profileStyles.section}>
                     <p><strong>Jobs:</strong></p>
                     {jobs.map((job, index) => (
-                    <div key={index} style={itemStyles.container} onClick={() => navigate(`/jobprofile`, { state: { job } })}>
-                        <img src={job.profile_pic} alt={job.name} style={itemStyles.profilePic} />
-                        <div style={itemStyles.textContainer}>
-                            <span style={itemStyles.name}>{job.name}</span>
-                            <span style={itemStyles.location}>Location: {job.location.city}, {job.location.country}</span>
+                        <div key={index} style={itemStyles.container} onClick={() => handleJobNavigation(job)}>
+                            <img src={job.profile_pic} alt={job.name} style={itemStyles.profilePic} />
+                            <div style={itemStyles.textContainer}>
+                                <span style={itemStyles.name}>{job.name}</span>
+                                <span style={itemStyles.location}>Location: {job.location.city}, {job.location.country}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
                 </div>
                 <button onClick={() => handleBackNavigation()} style={profileStyles.button}>Back</button>
             </div>

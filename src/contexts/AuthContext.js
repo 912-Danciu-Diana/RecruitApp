@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV } from "../services/apiService";
+import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer } from "../services/apiService";
 
 export const AuthContext = createContext();
 
@@ -11,6 +11,11 @@ const AuthContextProvider = ({ children }) => {
   const [authenticatedUserSkills, setAuthenticatedUserSkills] = useState([]);
   const [searchedSkills, setSearchedSkills] = useState([]);
   const [downloadCvURL, setDownloadCvUrl] = useState('');
+  const [applicants, setApplicants] = useState([]);
+  const [applicantSkills, setApplicantSkills] = useState([]);
+  const [application, setApplication] = useState([]);
+  const [quiz, setQuiz] = useState(null);
+  const [quizExists, setQuizExists] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,7 +24,6 @@ const AuthContextProvider = ({ children }) => {
         try {
           const profileData = await fetchUserProfile(token);
           setProfile(profileData);
-          console.log(profileData);
         } catch (error) {
           console.error("Error fetching profile data:", error);
         }
@@ -28,7 +32,6 @@ const AuthContextProvider = ({ children }) => {
       const getAuthenticatedUserSkills = async () => {
         try {
           const skills = await fetchAuthenticatedUserSkills(token);
-          console.log("fetched skills: ", skills);
           setAuthenticatedUserSkills(skills);
         } catch (error) {
           console.error("Get authenticated user's skills failed:", error);
@@ -38,7 +41,7 @@ const AuthContextProvider = ({ children }) => {
       fetchProfile();
       getAuthenticatedUserSkills();
     }
-  }, [userToken,searchedSkills]);
+  }, [userToken, searchedSkills]);
 
   const registerRecruiteeUser = async (userData, username, password) => {
     try {
@@ -70,6 +73,9 @@ const AuthContextProvider = ({ children }) => {
     setProfile(null);
     setAuthenticatedUserSkills([]);
     setDownloadCvUrl('');
+    setApplicants([]);
+    setQuiz(null);
+    setQuizExists(false);
     console.log("logged out");
   };
 
@@ -142,8 +148,129 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
+  const addApplication = async (jobId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await applyForJob(token, jobId);
+      console.log("Application successfull!");
+    } catch (error) {
+      console.error("Adding application failed:", error);
+    }
+  }
+
+  const hasApplied = async (jobId, userId) => {
+    try {
+      const response = await findApplication(jobId, userId);
+      console.log("Check if application exists successfull!");
+      return response.exists;
+    } catch (error) {
+      console.error("Checking if application exists failed:", error);
+    }
+  }
+
+  const getApplication = async (jobId, userId) => {
+    try {
+      const response = await getApplicationForJob(jobId, userId);
+      console.log("Get application successfull!");
+      setApplication(response);
+    } catch (error) {
+      console.error("Getting application failed:", error);
+    }
+  }
+
+  const getApplicants = async (jobId) => {
+    try {
+      const applicantsForJob = await getApplicantsForJob(jobId);
+      setApplicants(applicantsForJob);
+      console.log("Get applicants for job successful!");
+    } catch (error) {
+      console.error("Getting applicants for job failed:", error);
+    }
+  }
+
+  const getApplicantSkills = async (applicantId) => {
+    try {
+      const response = await fetchUserSkills(applicantId);
+      setApplicantSkills(response);
+    } catch (error) {
+      console.error("Getting applicant's skills failed:", error);
+    }
+  }
+
+  const acceptOrRejectForQuiz = async (jobId, applicantId, flag) => {
+    try {
+      const token = localStorage.getItem('token');
+      const updatedApplication = await acceptOrRejectApplicantForQuiz(token, jobId, applicantId, flag);
+      setApplication(updatedApplication); 
+      console.log("Accept for quiz successful", updatedApplication);
+    } catch (error) {
+      console.error("Accept candidate for quiz failed:", error);
+    }
+  };
+
+  const makeQuiz = async (jobId, applicantId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await postQuiz(token, jobId, applicantId);
+      setQuiz(response);
+      console.log("Make quiz successful", quiz);
+    } catch (error) {
+      console.error("Make quiz failed:", error);
+    }
+  }
+
+  const addQuestion = async(question) => {
+    try {
+      const response = await postQuestion(question);
+      console.log("Add question successful");
+      return response;
+    } catch (error) {
+      console.error("Add question failed:", error);
+    }
+  }
+
+  const addQuizQuestion = async(quizInterview, question) => {
+    try {
+      await postQuizQuestion(quizInterview, question);
+      console.log("Add quiz question successful");
+    } catch (error) {
+      console.error("Add quiz question failed:", error);
+    }
+  }
+
+  const addAnswer = async(answer, flag, question) => {
+    try {
+      await postAnswer(answer, flag, question);
+      console.log("Add answer successful");
+    } catch (error) {
+      console.error("Add answer failed:", error);
+    }
+  }
+
+  const interviewExists = async(job, recruitee) => {
+    try {
+      const response = await checkInterviewExists(job, recruitee);
+      setQuizExists(response.exists);
+      if(response.exists) {
+        const interview = await getInterview(response.interview_id);
+        setQuiz(interview);
+      }
+    } catch (error) {
+      console.error("Check interview exists failed:", error);
+    }
+  }
+
+  const addUsersAnswer = async(quizquestion, answer, flag) => {
+    try {
+      const response = await postUsersAnswer(quizquestion, answer, flag);
+      console.log(response);
+    } catch (error) {
+      console.error("Add users answer failed:", error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
+    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
       {children}
     </AuthContext.Provider>
   );

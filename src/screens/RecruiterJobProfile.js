@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+import React, { useContext, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
-
-const RecruiterProfileScreen = () => {
-    const { profile, logout } = useContext(AuthContext);
+const RecruiterJobProfile = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { job } = location.state || {};
+    const { profile, getApplicants, applicants } = useContext(AuthContext);
 
-    const handleLogout = async () => {
-        await logout();
-        navigate('/');
-    };
+    useEffect(() => {
+        getApplicants(job.id);
+    }, []);
 
     const profileStyles = {
         container: {
@@ -24,7 +24,7 @@ const RecruiterProfileScreen = () => {
             width: '100%',
             height: '150px',
             borderRadius: '15px',
-            marginBottom: '50px',
+            marginBottom: '20px',
             boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
         },
         profileInfo: {
@@ -58,14 +58,13 @@ const RecruiterProfileScreen = () => {
             boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
             margin: '10px 0',
             textAlign: 'left',
-            cursor: 'pointer',
         },
         input: {
             margin: '5px',
             padding: '10px',
             border: '1px solid #ddd',
             borderRadius: '5px',
-            width: 'calc(100% - 22px)', 
+            width: 'calc(100% - 22px)',
             marginBottom: '20px',
         },
         button: {
@@ -82,36 +81,44 @@ const RecruiterProfileScreen = () => {
         searchContainer: {
             paddingTop: '80px',
         },
+        applicant: {
+            cursor: 'pointer',
+        }
     };
 
     return (
-        (profile && (
-            <div style={profileStyles.container}>
+        <div style={profileStyles.container}>
             <img
-                src={`http://127.0.0.1:8080${profile.cover_photo_url}`}
-                alt={`${profile.username}'s cover`}
+                src={job.cover_photo}
+                alt={`${job.name}'s cover`}
                 style={profileStyles.coverPhoto}
             />
             <div style={profileStyles.profileInfo}>
                 <img
-                    src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
-                    alt={`${profile.username}'s profile`}
+                    src={job.profile_pic}
+                    alt={`${job.name}'s profile`}
                     style={profileStyles.profilePic}
                 />
                 <h1 style={profileStyles.profileName}>
-                    {profile.first_name} {profile.last_name}
+                    {job.name}
                 </h1>
             </div>
 
             <div style={profileStyles.searchContainer}>
-                <div style={profileStyles.section} onClick={() =>  navigate(`/companyprofile`, {state: { company: profile.company } })}>
-                    {profile.company && <p><strong>Company:</strong> {profile.company.name }</p>}
+                <div style={profileStyles.section}>
+                    {job.company && <p><strong>Company:</strong> {job.company.name}</p>}
+                    {job.description && <p><strong>Description:</strong> {job.description}</p>}
+                    {job.is_remote && <p><strong>Remote</strong></p>}
+                    {job.location && <p><strong>Location:</strong> {job.location.city}, {job.location.country}</p>}
+                    {applicants && <p><strong>Applicants:</strong></p> }
+                    {applicants.map((applicant, index) => (
+                        <div key={index} style={profileStyles.applicant} onClick={() => navigate('/applicantscreen', { state: { applicant: applicant, job: job } })}>{applicant.username}</div>
+                    ))}
                 </div>
-                <button onClick={handleLogout} style={profileStyles.button}>Logout</button>
+                <button onClick={() => navigate(`/companyprofile`, {state: { company: profile.company } })} style={profileStyles.button}>Back</button>
             </div>
         </div>
-        ))
     );
 }
 
-export default RecruiterProfileScreen;
+export default RecruiterJobProfile;

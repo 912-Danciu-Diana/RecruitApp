@@ -1,16 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 const JobProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { job } = location.state || {};
-    
+    const { profile, hasApplied, addApplication, getApplication, interviewExists, quiz } = useContext(AuthContext);
+    const [application, setApplication] = useState(null);
+    const [applicationExists, setApplicationExists] = useState(null);
+
 
     useEffect(() => {
-        console.log(job);
+        async function fetchData() {
+            const exists = await hasApplied(job.id, profile.id);
+            if (exists) {
+                const app = await getApplication(job.id, profile.id);
+                setApplication(app);
+                await interviewExists(job.id, profile.id);
+            }
+            setApplicationExists(exists);
+        }
+        fetchData();
+    }, []);
+
+    const handleAddApplication = async () => {
+        try {
+            await addApplication(job.id);
+            setApplicationExists(true);
+        } catch (error) {
+            console.error("Error adding application:", error);
+        }
     }
-    );
 
     const profileStyles = {
         container: {
@@ -107,8 +128,11 @@ const JobProfile = () => {
                     {job.description && <p><strong>Description:</strong> {job.description}</p>}
                     {job.is_remote && <p><strong>Remote</strong></p>}
                     {job.location && <p><strong>Location:</strong> {job.location.city}, {job.location.country}</p>}
+                    {applicationExists && quiz == null && <p><strong>Already applied for this job</strong> Waiting for response, if accepted, you will receive a quiz to take.</p>}
+                    {applicationExists && quiz != null && <button onClick={() => navigate('/takequiz')}>Take quiz</button>}
+                    {!applicationExists && <button onClick={() => handleAddApplication()}>Apply for this job</button>}
                 </div>
-                <button onClick={() => navigate(`/search`)} style={profileStyles.button}>Back to search</button>
+                <button style={profileStyles.button} onClick={() => navigate(-1)}>Go back</button>
             </div>
         </div>
     );

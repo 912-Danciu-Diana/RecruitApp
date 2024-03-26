@@ -10,12 +10,6 @@ const UserProfileScreen = () => {
     const [jobSearchTerm, setJobSearchTerm] = useState('');
     const [isAddingSkill, setIsAddingSkill] = useState(false);
 
-    useEffect(() => {
-        if (!userToken) {
-            navigate("/");
-        }
-    });
-
     const handleAddSkillClick = () => {
         setIsAddingSkill(true);
     };
@@ -187,9 +181,8 @@ const UserProfileScreen = () => {
                     {profile.school && <p><strong>School:</strong> {profile.school}</p>}
                     {profile.university && <p><strong>University:</strong> {profile.university}</p>}
                     {profile.work_experience && <p><strong>Work Experience:</strong> {profile.work_experience}</p>}
-                    {profile.company && <p><strong>Company:</strong> {profile.company}</p>}
                     {
-                        authenticatedUserSkills &&
+                        authenticatedUserSkills.length > 0 &&
                         <div style={profileStyles.section}>
                             <p><strong>Skills:</strong></p>
                             {authenticatedUserSkills.map((skill, index) => (

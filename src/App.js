@@ -8,6 +8,11 @@ import SearchScreen from './screens/SearchScreen';
 import JobProfile from './screens/JobProfile';
 import CompanyProfile from './screens/CompanyProfile';
 import RecruiterProfileScreen from './screens/RecruiterProfileScreen';
+import RecruiterJobProfile from './screens/RecruiterJobProfile';
+import ApplicantScreen from './screens/ApplicantScreen';
+import MakeQuizScreen from './screens/MakeQuizScreen';
+import ViewQuiz from './screens/ViewQuiz';
+import TakeQuiz from './screens/TakeQuiz';
 
 function App() {
   return (
@@ -21,6 +26,11 @@ function App() {
           <Route path="/jobprofile" element={<JobProfile />} />
           <Route path="/companyprofile" element={<CompanyProfile />} />
           <Route path="/recruiterprofile" element={<RecruiterProfileScreen />} />
+          <Route path="/recruiterjobprofile" element={<RecruiterJobProfile />} />
+          <Route path="/applicantscreen" element={<ApplicantScreen />} />
+          <Route path="/makequizscreen" element={<MakeQuizScreen />} />
+          <Route path="/viewquiz" element={<ViewQuiz />} />
+          <Route path="/takequiz" element={<TakeQuiz />} />
         </Routes>
       </Router>
     </AuthContextProvider>

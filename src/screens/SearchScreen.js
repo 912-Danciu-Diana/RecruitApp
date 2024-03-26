@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom'
 
@@ -32,6 +32,7 @@ const SearchScreen = () => {
             padding: '15px',
             borderRadius: '10px',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            cursor: 'pointer',
         },
         profilePic: {
             width: '50px',
