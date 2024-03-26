@@ -44,9 +44,21 @@ class GenerateCV(APIView):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def add_user_skill(request):
-    serializer = UserSkillsSerializer(data=request.data)
+    try:
+        recruitee_user = RecruiteeUser.objects.get(user_ptr_id=request.user.id)
+    except RecruiteeUser.DoesNotExist:
+        return Response({"detail": "RecruiteeUser instance not found for the given user."}, status=status.HTTP_404_NOT_FOUND)
+    skill_name = request.data.get('skill_name')
+    if not skill_name:
+        return Response({"detail": "Skill name is required."}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        skill = Skill.objects.get(name=skill_name)
+    except Skill.DoesNotExist:
+        return Response({"detail": f"Skill '{skill_name}' not found."}, status=status.HTTP_404_NOT_FOUND)
+    data = {'recruitee_user': recruitee_user.pk, 'skill': skill.pk}
+    serializer = UserSkillsSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
+        serializer.save(recruitee_user=recruitee_user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -67,3 +79,20 @@ def delete_user_skill(request):
 
     user_skill.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_skills(request):
+    user_skills = UserSkills.objects.filter(recruitee_user=request.user).select_related('skill')
+    serializer = UserSkillsSerializer(user_skills, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_user_skills_unauthenticated(request):
+    recruitee_id = request.query_params.get('recruitee')
+    user_skills = UserSkills.objects.filter(recruitee_user=recruitee_id).select_related('skill')
+    serializer = UserSkillsSerializer(user_skills, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

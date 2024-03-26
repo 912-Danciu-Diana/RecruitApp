@@ -13,7 +13,7 @@ class Interview(models.Model):
     job = models.ForeignKey('jobsApp.Job', on_delete=models.CASCADE)
     company_user = models.ForeignKey('usersApp.CompanyUser', on_delete=models.CASCADE)
     recruitee_user = models.ForeignKey('usersApp.RecruiteeUser', on_delete=models.CASCADE)
-    time = models.DateTimeField()
+    time = models.DateTimeField(blank=True, null=True)
     interview_type = models.CharField(
         max_length=10,
         choices=INTERVIEW_TYPES,
@@ -21,7 +21,7 @@ class Interview(models.Model):
     )
 
     def clean(self):
-        if self.time <= timezone.now():
+        if self.time is not None and self.time <= timezone.now():
             raise ValidationError({'time': 'The interview time must be in the future.'})
 
     def save(self, *args, **kwargs):

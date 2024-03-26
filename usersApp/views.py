@@ -1,7 +1,13 @@
+import os
+
+from django.conf import settings
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import parser_classes
 
+from companiesApp.serializers import CompanySerializer
 from .serializers import RecruiteeUserSerializer, CompanyUserSerializer
 from .models import RecruiteeUser, CompanyUser
 from .permissions import IsAdminOrCompanyUser
@@ -47,6 +53,7 @@ class UserProfileView(APIView):
     def get(self, request):
         user = request.user
         user_data = {
+            'id': user.pk,
             'username': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
@@ -66,8 +73,28 @@ class UserProfileView(APIView):
 
         elif user.is_company_user():
             company_user = user.companyuser
+            company_data = CompanySerializer(company_user.company).data
+            domain = 'http://127.0.0.1:8080'
+            if company_data['profile_pic']:
+                company_data['profile_pic'] = domain + company_data['profile_pic']
+            if company_data['cover_photo']:
+                company_data['cover_photo'] = domain + company_data['cover_photo']
             user_data.update({
-                'company': company_user.company.name,  # Assuming Company model has a 'name' field
+                'company': company_data,
             })
 
         return Response(user_data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def update_user_cv(request):
+    cv_file = request.FILES.get('cv')
+    if cv_file:
+        user_id = request.user.pk
+        user = RecruiteeUser.objects.get(pk=user_id)
+        user.cv.save(cv_file.name, cv_file, save=True)  # Save the file to the model field
+        return Response("User's CV updated successfully", status=status.HTTP_200_OK)
+    else:
+        return Response('No file attached', status=status.HTTP_400_BAD_REQUEST)

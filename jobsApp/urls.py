@@ -1,8 +1,11 @@
 from django.urls import path
+
+from interviewsApp.views import make_quiz
 from .views import (
     JobListView, JobDetailView,
     SkillListView, SkillDetailView,
-    JobSkillsListView, JobSkillsDetailView
+    JobSkillsListView, JobSkillsDetailView, FilteredSkillListView, ApplicationListView, ApplicationDetailView,
+    add_application, find_application, get_application, get_job_applicants, update_application
 )
 
 urlpatterns = [
@@ -12,4 +15,13 @@ urlpatterns = [
     path('api/skills/<int:pk>/', SkillDetailView.as_view(), name='api_skill_detail'),
     path('api/jobskills/', JobSkillsListView.as_view(), name='api_jobskills_list'),
     path('api/jobskills/<int:pk>/', JobSkillsDetailView.as_view(), name='api_jobskills_detail'),
+    path('api/search-skills/', FilteredSkillListView.as_view(), name='api_search_skills'),
+    path('api/applications/', ApplicationListView.as_view(), name='api_application_list'),
+    path('api/applications/<int:pk>/', ApplicationDetailView.as_view(), name='api_application_detail'),
+    path('api/add_application/', add_application, name='api_add_application'),
+    path('api/find_application/', find_application, name='api_find_application'),
+    path('api/get_application/', get_application, name='api_get_application'),
+    path('api/get_job_applicants/', get_job_applicants, name='api_get_job_applicants'),
+    path('api/update_application/', update_application, name='api_update_application'),
+    path('api/make_quiz/', make_quiz, name='api_make_quiz')
 ]
