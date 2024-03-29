@@ -278,6 +278,7 @@ const AuthContextProvider = ({ children }) => {
   const checkQuizTaken = async() => {
     try {
       console.log("checking if quiz taken");
+      console.log(quiz);
       if(quiz) {
         const response = await checkIfQuizTaken(quiz.id);
         setQuizTaken(response.interview_taken);
