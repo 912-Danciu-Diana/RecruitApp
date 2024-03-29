@@ -382,3 +382,16 @@ export const postUsersAnswer = async(quizquestion, answer, flag) => {
         throw error;
     }
 }
+
+export const checkIfQuizTaken = async (interviewId) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/check_quiz_taken/${interviewId}/`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Checking if quiz was taken failed: ", error);
+        throw error;
+    }
+};

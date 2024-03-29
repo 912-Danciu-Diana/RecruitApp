@@ -6,8 +6,7 @@ const JobProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { job } = location.state || {};
-    const { profile, hasApplied, addApplication, getApplication, interviewExists, quiz } = useContext(AuthContext);
-    const [application, setApplication] = useState(null);
+    const { profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken } = useContext(AuthContext);
     const [applicationExists, setApplicationExists] = useState(null);
 
 
@@ -16,12 +15,15 @@ const JobProfile = () => {
             const exists = await hasApplied(job.id, profile.id);
             if (exists) {
                 const app = await getApplication(job.id, profile.id);
-                setApplication(app);
                 await interviewExists(job.id, profile.id);
             }
             setApplicationExists(exists);
         }
+        async function fetchQuizTaken() {
+            await checkQuizTaken();
+        }
         fetchData();
+        fetchQuizTaken();
     }, []);
 
     const handleAddApplication = async () => {
@@ -128,8 +130,10 @@ const JobProfile = () => {
                     {job.description && <p><strong>Description:</strong> {job.description}</p>}
                     {job.is_remote && <p><strong>Remote</strong></p>}
                     {job.location && <p><strong>Location:</strong> {job.location.city}, {job.location.country}</p>}
-                    {applicationExists && quiz == null && <p><strong>Already applied for this job</strong> Waiting for response, if accepted, you will receive a quiz to take.</p>}
-                    {applicationExists && quiz != null && <button onClick={() => navigate('/takequiz')}>Take quiz</button>}
+                    {applicationExists && application[0].acceptedForQuiz === null  && <p><strong>Already applied for this job</strong> Waiting for response, if accepted, you will receive a quiz to take.</p>}
+                    {applicationExists && application[0].acceptedForQuiz === false && <p><strong>Application status:</strong> Rejected.</p>}
+                    {applicationExists && quiz != null && quizTaken === false && <button onClick={() => navigate('/takequiz')}>Take quiz</button>}
+                    {quizTaken === true && <p><strong>Application status: </strong>Quiz taken, score is: .. Waiting for response.</p>}
                     {!applicationExists && <button onClick={() => handleAddApplication()}>Apply for this job</button>}
                 </div>
                 <button style={profileStyles.button} onClick={() => navigate(-1)}>Go back</button>

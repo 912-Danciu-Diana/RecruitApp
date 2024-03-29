@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer } from "../services/apiService";
+import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer, checkIfQuizTaken } from "../services/apiService";
 
 export const AuthContext = createContext();
 
@@ -16,6 +16,7 @@ const AuthContextProvider = ({ children }) => {
   const [application, setApplication] = useState([]);
   const [quiz, setQuiz] = useState(null);
   const [quizExists, setQuizExists] = useState(false);
+  const [quizTaken, setQuizTaken] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -173,6 +174,7 @@ const AuthContextProvider = ({ children }) => {
       const response = await getApplicationForJob(jobId, userId);
       console.log("Get application successfull!");
       setApplication(response);
+      console.log(response);
     } catch (error) {
       console.error("Getting application failed:", error);
     }
@@ -250,10 +252,14 @@ const AuthContextProvider = ({ children }) => {
   const interviewExists = async(job, recruitee) => {
     try {
       const response = await checkInterviewExists(job, recruitee);
+      console.log("check if interview exists");
+      console.log(response);
       setQuizExists(response.exists);
       if(response.exists) {
         const interview = await getInterview(response.interview_id);
         setQuiz(interview);
+      } else {
+        setQuiz(null);
       }
     } catch (error) {
       console.error("Check interview exists failed:", error);
@@ -269,8 +275,23 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
+  const checkQuizTaken = async() => {
+    try {
+      console.log("checking if quiz taken");
+      if(quiz) {
+        const response = await checkIfQuizTaken(quiz.id);
+        setQuizTaken(response.interview_taken);
+        console.log(response);
+      } else {
+        setQuizTaken(false);
+      }
+    } catch(error) {
+      console.error("Checking if quiz was taken failed: ", error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
+    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, quizTaken, checkQuizTaken, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
       {children}
     </AuthContext.Provider>
   );
