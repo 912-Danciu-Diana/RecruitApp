@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 const ApplicantScreen = () => {
     const location = useLocation();
     const { applicant, job } = location.state || {};
-    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, quizExists, interviewExists } = useContext(AuthContext);
+    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,6 +21,23 @@ const ApplicantScreen = () => {
         console.log("application:", application);
     }, [application]);
 
+    useEffect(() => {
+        async function fetchQuizStatus() {
+            if (quiz) {
+                await checkQuizTaken(quiz.id);
+            } else {
+                setQuizTaken(false);
+            }
+        }
+        fetchQuizStatus();
+    }, [quiz, quizTaken, checkQuizTaken]);
+
+    useEffect(() => {
+        if (quiz && quizTaken) {
+            calculateQuizScore(quiz.id);
+        }
+    }, [quiz, quizTaken]);
+
     const handleAcceptForQuiz = async () => {
         await acceptOrRejectForQuiz(job.id, applicant.id, true);
         window.location.reload();
@@ -35,6 +52,42 @@ const ApplicantScreen = () => {
         await makeQuiz(job.id, applicant.id);
         navigate('/makequizscreen')
     }
+
+    const renderApplicationStatus = () => {
+        if (!application || application.length === 0) {
+            return null;
+        }
+
+        const currentApplication = application[0];
+
+        if (currentApplication.acceptedForQuiz === false) {
+            return <p><strong>Application status:</strong> Candidate rejected</p>;
+        }
+
+        if (currentApplication.acceptedForQuiz === true && quizExists) {
+            if (quizTaken) {
+                return <div>
+                    <p><strong>Quiz status:</strong> Completed. Score: {quizScore}%</p>
+                    <button onClick={() => navigate('/viewquiz')}>View quiz</button>
+                    <button>Accept candidate</button>
+                    <button>Reject candidate</button>
+                </div>;
+            } else {
+                return <button onClick={() => navigate('/viewquiz')}>Quiz sent, view quiz</button>;
+            }
+        }
+
+        if (currentApplication.acceptedForQuiz === true && !quizExists) {
+            return <button onClick={handleMakeQuiz}>Make a quiz</button>;
+        }
+
+        return (
+            <div>
+                <button onClick={handleAcceptForQuiz}>Accept candidate</button>
+                <button onClick={handleRejectForQuiz}>Reject candidate</button>
+            </div>
+        );
+    };
 
     const profileStyles = {
         container: {
@@ -145,22 +198,11 @@ const ApplicantScreen = () => {
                                 ))}
                             </div>
                         }
-                        {application && application.length > 0 &&
-                            <div>
-                                <p><strong>Application status: </strong></p>
-                                {application[0].acceptedForQuiz === null &&
-                                    <div>
-                                        <button onClick={() => handleAcceptForQuiz()}>Accept candidate</button>
-                                        <button onClick={() => handleRejectForQuiz()}>Reject candidate</button>
-                                    </div>}
-                                {application[0].acceptedForQuiz === true && quizExists === false &&
-                                    <button onClick={() => handleMakeQuiz()}>Make a quiz</button>}
-                                {application[0].acceptedForQuiz === true && quizExists === true &&
-                                    <button onClick={() => navigate('/viewquiz')}>Quiz sent, view quiz</button>}
-                                {application[0].acceptedForQuiz === false &&
-                                    <p>Candidate rejected</p>}
-                            </div>
-                        }
+
+                        <div>
+                            {renderApplicationStatus()}
+                        </div>
+
                     </div>
                     <button style={profileStyles.button} onClick={() => navigate('/recruiterjobprofile', { state: { job: job } })}>Back</button>
                 </div>

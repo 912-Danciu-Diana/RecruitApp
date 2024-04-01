@@ -395,3 +395,16 @@ export const checkIfQuizTaken = async (interviewId) => {
         throw error;
     }
 };
+
+export const calculateScore = async (quiz_id) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/calculate_quiz_score/${quiz_id}/`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Calculating the quiz score failed failed: ", error);
+        throw error;
+    }
+}

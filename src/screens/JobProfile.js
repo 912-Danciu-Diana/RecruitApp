@@ -6,7 +6,7 @@ const JobProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { job } = location.state || {};
-    const { profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken, setQuizTaken } = useContext(AuthContext);
+    const { profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken, setQuizTaken, calculateQuizScore, quizScore } = useContext(AuthContext);
     const [applicationExists, setApplicationExists] = useState(null);
 
 
@@ -35,6 +35,12 @@ const JobProfile = () => {
         fetchQuizStatus();
     }, [quiz, quizTaken, checkQuizTaken]);
 
+    useEffect(() => {
+        if (quiz && quizTaken) {
+            calculateQuizScore(quiz.id);
+        }
+    }, [quiz, quizTaken]);
+
     const handleAddApplication = async () => {
         try {
             await addApplication(job.id);
@@ -57,7 +63,7 @@ const JobProfile = () => {
           }
       
           if (currentApplication.acceptedForQuiz === true && quiz != null && quizTaken) {
-            return <p><strong>Application status: </strong>Quiz taken, score is: .. Waiting for response.</p>;
+            return <p><strong>Application status: </strong>Quiz taken, score is: {quizScore}% Waiting for response.</p>;
           }
       
           if (currentApplication.acceptedForQuiz === null || currentApplication.acceptedForQuiz === true) {
