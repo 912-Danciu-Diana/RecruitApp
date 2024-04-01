@@ -6,30 +6,34 @@ const JobProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { job } = location.state || {};
-    const { profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken } = useContext(AuthContext);
+    const { profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken, setQuizTaken } = useContext(AuthContext);
     const [applicationExists, setApplicationExists] = useState(null);
 
 
     useEffect(() => {
         async function fetchData() {
-            const exists = await hasApplied(job.id, profile.id);
-            setApplicationExists(exists);
-            if (exists) {
-                await getApplication(job.id, profile.id);
-                await interviewExists(job.id, profile.id); 
+            if (profile && job && job.id && profile.id) {
+                const exists = await hasApplied(job.id, profile.id);
+                setApplicationExists(exists);
+                if (exists) {
+                    await getApplication(job.id, profile.id);
+                    await interviewExists(job.id, profile.id);
+                }
             }
         }
         fetchData();
-    }, [job.id, profile.id]);
-    
+    }, [job?.id, profile?.id]);
+
     useEffect(() => {
         async function fetchQuizStatus() {
-            if (quiz && !quizTaken) {
+            if (quiz) {
                 await checkQuizTaken(quiz.id);
+            } else {
+                setQuizTaken(false);
             }
         }
         fetchQuizStatus();
-    }, [quiz]); 
+    }, [quiz, quizTaken, checkQuizTaken]);
 
     const handleAddApplication = async () => {
         try {
@@ -39,6 +43,35 @@ const JobProfile = () => {
             console.error("Error adding application:", error);
         }
     }
+
+    function renderApplicationStatus() {
+        if (applicationExists && application && application.length > 0) {
+          const currentApplication = application[0];
+      
+          if (currentApplication.acceptedForQuiz === false) {
+            return <p><strong>Application status:</strong> Rejected.</p>;
+          }
+      
+          if (currentApplication.acceptedForQuiz === true && quiz != null && !quizTaken) {
+            return <button onClick={() => navigate('/takequiz')}>Take quiz</button>;
+          }
+      
+          if (currentApplication.acceptedForQuiz === true && quiz != null && quizTaken) {
+            return <p><strong>Application status: </strong>Quiz taken, score is: .. Waiting for response.</p>;
+          }
+      
+          if (currentApplication.acceptedForQuiz === null || currentApplication.acceptedForQuiz === true) {
+            return <p><strong>Application status:</strong> Applied for this job. If accepted, you will receive a quiz to take.</p>;
+          }
+        }
+
+        if (!applicationExists) {
+          return <button onClick={() => handleAddApplication()}>Apply for this job</button>;
+        }
+    
+        return null;
+      }
+      
 
     const profileStyles = {
         container: {
@@ -135,11 +168,7 @@ const JobProfile = () => {
                     {job.description && <p><strong>Description:</strong> {job.description}</p>}
                     {job.is_remote && <p><strong>Remote</strong></p>}
                     {job.location && <p><strong>Location:</strong> {job.location.city}, {job.location.country}</p>}
-                    {applicationExists && application[0].acceptedForQuiz === null && <p><strong>Already applied for this job</strong> Waiting for response, if accepted, you will receive a quiz to take.</p>}
-                    {applicationExists && application[0].acceptedForQuiz === false && <p><strong>Application status:</strong> Rejected.</p>}
-                    {applicationExists && quiz != null && quizTaken === false && <button onClick={() => navigate('/takequiz')}>Take quiz</button>}
-                    {applicationExists && application[0].acceptedForQuiz === true && quiz != null && quizTaken === true && <p><strong>Application status: </strong>Quiz taken, score is: .. Waiting for response.</p>}
-                    {!applicationExists && <button onClick={() => handleAddApplication()}>Apply for this job</button>}
+                    {renderApplicationStatus()}
                 </div>
                 <button style={profileStyles.button} onClick={() => navigate(-1)}>Go back</button>
             </div>
