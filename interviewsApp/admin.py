@@ -4,7 +4,7 @@ from .models import Interview, Question, Answer, QuizQuestion, UsersAnswer
 
 @admin.register(Interview)
 class InterviewAdmin(admin.ModelAdmin):
-    list_display = ('job', 'company_user', 'recruitee_user', 'time', 'interview_type')
+    list_display = ('id', 'job', 'company_user', 'recruitee_user', 'time', 'interview_type')
 
 
 @admin.register(Question)

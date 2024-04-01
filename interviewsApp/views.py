@@ -148,3 +148,33 @@ def checkIfQuizTaken(request, interview_id):
     answers_exist = UsersAnswer.objects.filter(quiz_question__quiz_interview=interview).exists()
 
     return Response({"interview_taken": answers_exist})
+
+
+@api_view(['GET'])
+def calculate_quiz_score(request, interview_id):
+    try:
+        interview = Interview.objects.get(id=interview_id, interview_type='QUIZ')
+    except Interview.DoesNotExist:
+        return Response({"error": "Quiz interview not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    quiz_questions = QuizQuestion.objects.filter(quiz_interview=interview)
+    total_questions = quiz_questions.count()
+
+    if total_questions == 0:
+        return Response({"error": "No questions found for this quiz."}, status=status.HTTP_400_BAD_REQUEST)
+
+    correct_answers_count = 0
+    total_answers_count = 0
+
+    for quiz_question in quiz_questions:
+        user_answers = UsersAnswer.objects.filter(quiz_question=quiz_question)
+        total_answers_count += user_answers.count()
+
+        for user_answer in user_answers:
+            if user_answer.is_correct == user_answer.answer.is_correct:
+                correct_answers_count += 1
+
+
+    score_percentage = (correct_answers_count / total_answers_count) * 100
+
+    return Response({"total_answers": total_answers_count, "correct_answers": correct_answers_count, "score_percentage": score_percentage})

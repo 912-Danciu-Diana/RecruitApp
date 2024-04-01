@@ -4,7 +4,7 @@ from .views import (
     QuestionListView, QuestionDetailView,
     AnswerListView, AnswerDetailView,
     QuizQuestionListView, QuizQuestionDetailView, generate_quiz_api, UsersAnswerListView, UsersAnswerDetailView,
-    check_interview_exists, checkIfQuizTaken
+    check_interview_exists, checkIfQuizTaken, calculate_quiz_score
 )
 
 urlpatterns = [
@@ -21,4 +21,5 @@ urlpatterns = [
     path('api/users_answer/<int:pk>/', UsersAnswerDetailView.as_view(), name='api_users_answer_detail'),
     path('api/check_interview_exists/', check_interview_exists, name='check_interview_exists'),
     path('api/check_quiz_taken/<int:interview_id>/', checkIfQuizTaken, name='check_quiz_taken'),
+    path('api/calculate_quiz_score/<int:interview_id>/', calculate_quiz_score, name='calculate_quiz_score'),
 ]
