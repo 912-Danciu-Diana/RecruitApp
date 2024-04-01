@@ -136,3 +136,15 @@ def check_interview_exists(request):
         return Response({"exists": True, "detail": "Interview already exists for this job and applicant.", "interview_id": interview.pk})
     else:
         return Response({"exists": False, "detail": "No interview found for this job and applicant."})
+
+
+@api_view(['GET'])
+def checkIfQuizTaken(request, interview_id):
+    try:
+        interview = Interview.objects.get(id=interview_id)
+    except Interview.DoesNotExist:
+        return Response({"error": "Interview not found."}, status=404)
+
+    answers_exist = UsersAnswer.objects.filter(quiz_question__quiz_interview=interview).exists()
+
+    return Response({"interview_taken": answers_exist})
