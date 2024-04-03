@@ -63,7 +63,11 @@ const JobProfile = () => {
           }
       
           if (currentApplication.acceptedForQuiz === true && quiz != null && quizTaken) {
-            return <p><strong>Application status: </strong>Quiz taken, score is: {quizScore}% Waiting for response.</p>;
+            console.log(quiz.id);
+            return <div>
+                <p><strong>Application status: </strong>Quiz taken, score is: {quizScore}% Waiting for response.</p>
+                <button onClick={() => navigate('/viewtakenquiz', {state: {quiz_id: quiz.id, score: quizScore}})}>View quiz</button>
+            </div>;
           }
       
           if (currentApplication.acceptedForQuiz === null || currentApplication.acceptedForQuiz === true) {

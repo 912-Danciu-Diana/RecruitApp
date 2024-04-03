@@ -404,7 +404,20 @@ export const calculateScore = async (quiz_id) => {
         }
         return await response.json();
     } catch (error) {
-        console.error("Calculating the quiz score failed failed: ", error);
+        console.error("Calculating the quiz score failed: ", error);
+        throw error;
+    }
+}
+
+export const getQuizDetails = async (quiz_id) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/quiz_details/${quiz_id}/`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Getting quiz details failed: ", error);
         throw error;
     }
 }

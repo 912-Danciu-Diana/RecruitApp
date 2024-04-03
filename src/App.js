@@ -13,6 +13,7 @@ import ApplicantScreen from './screens/ApplicantScreen';
 import MakeQuizScreen from './screens/MakeQuizScreen';
 import ViewQuiz from './screens/ViewQuiz';
 import TakeQuiz from './screens/TakeQuiz';
+import ViewTakenQuiz from './screens/ViewTakenQuiz';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/makequizscreen" element={<MakeQuizScreen />} />
           <Route path="/viewquiz" element={<ViewQuiz />} />
           <Route path="/takequiz" element={<TakeQuiz />} />
+          <Route path="/viewtakenquiz" element={<ViewTakenQuiz />} />
         </Routes>
       </Router>
     </AuthContextProvider>

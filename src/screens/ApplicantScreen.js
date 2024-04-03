@@ -68,7 +68,7 @@ const ApplicantScreen = () => {
             if (quizTaken) {
                 return <div>
                     <p><strong>Quiz status:</strong> Completed. Score: {quizScore}%</p>
-                    <button onClick={() => navigate('/viewquiz')}>View quiz</button>
+                    <button onClick={() => navigate('/viewtakenquiz', {state: {quiz_id: quiz.id, score: quizScore}})}>View quiz</button>
                     <button>Accept candidate</button>
                     <button>Reject candidate</button>
                 </div>;
