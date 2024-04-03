@@ -178,3 +178,42 @@ def calculate_quiz_score(request, interview_id):
     score_percentage = (correct_answers_count / total_answers_count) * 100
 
     return Response({"total_answers": total_answers_count, "correct_answers": correct_answers_count, "score_percentage": score_percentage})
+
+
+@api_view(['GET'])
+def quiz_details(request, interview_id):
+    try:
+        interview = Interview.objects.get(id=interview_id, interview_type='QUIZ')
+    except Interview.DoesNotExist:
+        return Response({"error": "Quiz interview not found."}, status=404)
+
+    quiz_questions = QuizQuestion.objects.filter(quiz_interview=interview).select_related('question')
+    quiz_questions_data = []
+
+    for quiz_question in quiz_questions:
+        question_data = {
+            "id": quiz_question.id,
+            "question": quiz_question.question.question,
+            "user_answers": []
+        }
+
+        user_answers = UsersAnswer.objects.filter(quiz_question=quiz_question).select_related('answer')
+
+        user_answer_data = [
+            {
+                "answer_id": user_answer.answer.id,
+                "answer": user_answer.answer.answer,
+                "user_marked_correct": user_answer.is_correct,
+                "actual_is_correct": user_answer.answer.is_correct
+            } for user_answer in user_answers.all()
+        ]
+
+        if user_answer_data:
+            question_data["user_answers"] = user_answer_data
+
+        quiz_questions_data.append(question_data)
+
+    return Response({
+        'id': interview.id,
+        'quiz_questions': quiz_questions_data
+    })
