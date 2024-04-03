@@ -9,15 +9,14 @@ const ViewTakenQuiz = () => {
     const { quizDetailsFunc, quizDetails } = useContext(AuthContext);
 
     useEffect(() => {
-        async function fetchData() {
-            await quizDetailsFunc(quiz_id);
+        if (quiz_id) {
+            quizDetailsFunc(quiz_id);
         }
-        fetchData();
-    }, [quiz_id]);
+    }, [quiz_id, quizDetailsFunc]);
 
-    useEffect(() => {
-        console.log(quizDetails);
-    }, [quizDetails]);
+    if (!quizDetails || !quizDetails.quiz_questions) {
+        return <div>Loading quiz details...</div>;
+    }
 
     return (
         <div>
@@ -46,7 +45,7 @@ const ViewTakenQuiz = () => {
             <p>Total score: {score}%</p>
             <button onClick={() => navigate(-1)}>Go back</button>
         </div>
-    );    
-}
+    );
+};
 
 export default ViewTakenQuiz;

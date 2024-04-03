@@ -54,8 +54,12 @@ const JobProfile = () => {
         if (applicationExists && application && application.length > 0) {
           const currentApplication = application[0];
       
-          if (currentApplication.acceptedForQuiz === false) {
+          if (currentApplication.acceptedForQuiz === false || currentApplication.accepted === false) {
             return <p><strong>Application status:</strong> Rejected.</p>;
+          }
+
+          if(currentApplication.accepted) {
+            return <p><strong>Application status:</strong> Accepted for job.</p>;
           }
       
           if (currentApplication.acceptedForQuiz === true && quiz != null && !quizTaken) {

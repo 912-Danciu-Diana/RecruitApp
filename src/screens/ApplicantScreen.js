@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 const ApplicantScreen = () => {
     const location = useLocation();
     const { applicant, job } = location.state || {};
-    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore } = useContext(AuthContext);
+    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore, acceptOrRejectCandidate } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,6 +48,16 @@ const ApplicantScreen = () => {
         window.location.reload();
     }
 
+    const handleAcceptCandidate = async () => {
+        await acceptOrRejectCandidate(job.id, applicant.id, true);
+        window.location.reload();
+    }
+
+    const handleRejectCandidate = async () => {
+        await acceptOrRejectCandidate(job.id, applicant.id, false);
+        window.location.reload();
+    }
+
     const handleMakeQuiz = async () => {
         await makeQuiz(job.id, applicant.id);
         navigate('/makequizscreen')
@@ -60,17 +70,21 @@ const ApplicantScreen = () => {
 
         const currentApplication = application[0];
 
-        if (currentApplication.acceptedForQuiz === false) {
+        if (currentApplication.acceptedForQuiz === false || currentApplication.accepted === false) {
             return <p><strong>Application status:</strong> Candidate rejected</p>;
         }
+
+        if(currentApplication.accepted) {
+            return <p><strong>Application status:</strong> Accepted for job.</p>;
+          }
 
         if (currentApplication.acceptedForQuiz === true && quizExists) {
             if (quizTaken) {
                 return <div>
                     <p><strong>Quiz status:</strong> Completed. Score: {quizScore}%</p>
                     <button onClick={() => navigate('/viewtakenquiz', {state: {quiz_id: quiz.id, score: quizScore}})}>View quiz</button>
-                    <button>Accept candidate</button>
-                    <button>Reject candidate</button>
+                    <button onClick={handleAcceptCandidate}>Accept candidate</button>
+                    <button onClick={handleRejectCandidate}>Reject candidate</button>
                 </div>;
             } else {
                 return <button onClick={() => navigate('/viewquiz')}>Quiz sent, view quiz</button>;

@@ -264,6 +264,26 @@ export const acceptOrRejectApplicantForQuiz = async (token, jobId, applicantId, 
     }
 }
 
+export const acceptOrRejectApplicant = async (token, jobId, applicantId, flag) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/update_application/?job=${jobId}&user=${applicantId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify({accepted: flag}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Accept candidate failed:", error);
+        throw error;
+    }
+}
+
 export const postQuiz = async(token, jobId, applicantId) => {
     try {
         const response = await fetch(`${baseURL}/jobsApp/api/make_quiz/?job=${jobId}&recruitee=${applicantId}`, {
