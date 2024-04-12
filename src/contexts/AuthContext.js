@@ -53,6 +53,7 @@ const AuthContextProvider = ({ children }) => {
       await login(loginData);
     } catch (error) {
       console.error("Error registering user:", error);
+      throw error;
     }
   };
 
@@ -66,7 +67,7 @@ const AuthContextProvider = ({ children }) => {
       console.log("Login successful with token:", token);
     } catch (error) {
       console.error("Login failed:", error);
-      // Handle login error, for example by showing an alert to the user
+      throw error;
     }
   };
 

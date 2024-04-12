@@ -33,6 +33,7 @@ const RegisterRecruiteeScreen = () => {
     const hiddenProfilePicInput = useRef(null);
     const hiddenCoverPhotoInput = useRef(null);
     const hiddenCvInput = useRef(null);
+    const [error, setError] = useState('');
 
     const { registerRecruiteeUser } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -58,8 +59,9 @@ const RegisterRecruiteeScreen = () => {
         try {
             await registerRecruiteeUser(formData, username, password);
             navigate('/userprofile');
+            setError('');
         } catch (error) {
-            console.error("Registration failed:", error);
+            setError("Registration failed. Please check all the fields and try again.");
         }
     };
 
@@ -150,6 +152,11 @@ const RegisterRecruiteeScreen = () => {
             fontWeight: 'bold',
             color: '#000'
         },
+
+        errorMessage: {
+            color: 'red',
+            marginTop: '10px'
+        }      
     };
 
     return (
@@ -260,6 +267,7 @@ const RegisterRecruiteeScreen = () => {
                     {cv && <p>Uploaded file: {cv.name}</p>}
                 </>
                 <Button style={styles.button} variant="contained" onClick={handleRegister}>Register</Button>
+                {error && <div style={styles.errorMessage}>{error}</div>}
                 <div style={styles.registerContainer}>
                     Already have an account? <Link to="/" style={styles.link}>Login here</Link>
                 </div>

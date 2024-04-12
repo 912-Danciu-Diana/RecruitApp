@@ -21,6 +21,7 @@ const CustomTextField = styled(TextField)({
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { login, profile } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -33,8 +34,13 @@ const LoginScreen = () => {
   }, [profile, navigate]);
 
   const handleLogin = async () => {
-    await login({ username, password });
-  };
+    try {
+      await login({ username, password });
+      setError('');  
+    } catch (error) {
+      setError("Login failed. Please check your username and password and try again.");
+    }
+  };  
 
   const styles = {
     loginContainer: {
@@ -109,8 +115,12 @@ const LoginScreen = () => {
       textDecoration: 'none',
       fontWeight: 'bold',
       color: '#000'
-    }
+    },
 
+    errorMessage: {
+      color: 'red',
+      marginTop: '10px'
+    }
 
   };
 
@@ -127,6 +137,7 @@ const LoginScreen = () => {
           <CustomTextField style={styles.input} variant='standard' label='Password' type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </div>
         <Button style={styles.button} variant="contained" onClick={handleLogin}>Login</Button>
+        {error && <div style={styles.errorMessage}>{error}</div>}
         <div style={styles.registerContainer}>
           Don't have an account as a recruitee already?
           <Link to="/register-recruitee" style={styles.link}>Register here</Link>
