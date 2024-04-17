@@ -441,3 +441,21 @@ export const getQuizDetails = async (quiz_id) => {
         throw error;
     }
 }
+
+export const generateProfileFromCV = async (file) => {
+    try {
+        const response = await fetch(`${baseURL}/usersApp/api/user/generate_profile/`, {
+            method: 'POST',
+            body: file,  
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Generating profile from CV failed: ", error);
+        throw error;
+    }
+}

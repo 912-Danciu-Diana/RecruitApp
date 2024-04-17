@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer, checkIfQuizTaken, calculateScore, getQuizDetails, acceptOrRejectApplicant } from "../services/apiService";
+import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer, checkIfQuizTaken, calculateScore, getQuizDetails, acceptOrRejectApplicant, generateProfileFromCV } from "../services/apiService";
 
 export const AuthContext = createContext();
 
@@ -19,6 +19,7 @@ const AuthContextProvider = ({ children }) => {
   const [quizTaken, setQuizTaken] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
   const [quizDetails, setQuizDetails] = useState([]);
+  const [profileFromCV, setProfileFromCV] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -325,8 +326,17 @@ const AuthContextProvider = ({ children }) => {
      }
   }
 
+  const generateProfile = async(file) => {
+    try {
+      const response = await generateProfileFromCV(file);
+      setProfileFromCV(response);
+    } catch (error) {
+      console.error("Generating profile from CV failed:", error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, quizTaken, quizScore, quizDetails, acceptOrRejectCandidate, quizDetailsFunc, calculateQuizScore, setQuizTaken, checkQuizTaken, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
+    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, quizTaken, quizScore, quizDetails, profileFromCV, generateProfile, acceptOrRejectCandidate, quizDetailsFunc, calculateQuizScore, setQuizTaken, checkQuizTaken, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
@@ -35,11 +35,47 @@ const RegisterRecruiteeScreen = () => {
     const hiddenCvInput = useRef(null);
     const [error, setError] = useState('');
 
-    const { registerRecruiteeUser } = useContext(AuthContext);
+    const { registerRecruiteeUser, profileFromCV, generateProfile } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchProfileData = async () => {
+            if (cv) {
+                const formData = new FormData();
+                formData.append('cv', cv);
+                try {
+                  await generateProfile(formData);
+                } catch (error) {
+                    console.error("Error generating profile from CV:", error);
+                }
+            }
+        };
+        fetchProfileData();
+    }, [cv]);
+
+    useEffect(() => {
+        if (profileFromCV) {
+            console.log("Auto-filling form fields with:", profileFromCV);
+            setEmail(profileFromCV.email || '');
+            setFirstName(profileFromCV.name.split(' ')[0] || '');
+            setLastName(profileFromCV.name.split(' ')[1] || '');
+            setUniversity(profileFromCV.college_name || '');
+            setWorkExperience(profileFromCV.experience || '');
+        }
+    }, [profileFromCV]);
 
     const handleFileChange = (e, setFile) => {
         setFile(e.target.files[0]);
+    };
+
+    const handleCVChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setCv(file);
+            const formData = new FormData();
+            formData.append('cv', file);
+            await generateProfile(formData);
+        }
     };
 
     const handleRegister = async () => {
@@ -89,6 +125,7 @@ const RegisterRecruiteeScreen = () => {
             fontFamily: 'Helvetica'
         },
         formContainer: {
+            alignSelf: 'flex-start',
             height: '100%',
             width: '50%',
             display: 'flex',
@@ -96,8 +133,8 @@ const RegisterRecruiteeScreen = () => {
             justifyContent: 'center',
             alignItems: 'center',
             gap: '1.2em',
-            padding: '0 12%',
-            overflowY: 'auto',
+            padding: '100px 12%',
+            overflow: 'scroll',
         },
         imageContainer: {
             height: '100%',
@@ -156,12 +193,24 @@ const RegisterRecruiteeScreen = () => {
         errorMessage: {
             color: 'red',
             marginTop: '10px'
-        }      
+        }
     };
 
     return (
         <div style={styles.loginContainer}>
             <div style={styles.formContainer}>
+                <>
+                    <Button style={styles.button} variant="contained" onClick={handleCvClick} >
+                        Upload your cv and autofill the fields
+                    </Button>
+                    <input
+                        style={{ display: "none" }}
+                        type="file"
+                        onChange={e => handleCVChange(e, setCv)}
+                        ref={hiddenCvInput}
+                    />
+                    {cv && <p>Uploaded file: {cv.name}</p>}
+                </>
                 <div style={styles.inputContainer}><CustomTextField
                     style={styles.input}
                     variant='standard'
@@ -173,7 +222,7 @@ const RegisterRecruiteeScreen = () => {
                 <div style={styles.inputContainer}><CustomTextField
                     style={styles.input}
                     variant='standard'
-                    placeholder="Email *"
+                    label="Email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     type="email"
@@ -253,18 +302,6 @@ const RegisterRecruiteeScreen = () => {
                         ref={hiddenCoverPhotoInput}
                     />
                     {coverPhoto && <p>Uploaded file: {coverPhoto.name}</p>}
-                </>
-                <>
-                    <Button style={styles.button} variant="contained" onClick={handleCvClick} >
-                        Upload your cv
-                    </Button>
-                    <input
-                        style={{ display: "none" }}
-                        type="file"
-                        onChange={e => handleFileChange(e, setCv)}
-                        ref={hiddenCvInput}
-                    />
-                    {cv && <p>Uploaded file: {cv.name}</p>}
                 </>
                 <Button style={styles.button} variant="contained" onClick={handleRegister}>Register</Button>
                 {error && <div style={styles.errorMessage}>{error}</div>}
