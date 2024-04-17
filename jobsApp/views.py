@@ -5,11 +5,13 @@ from rest_framework.decorators import authentication_classes, api_view, permissi
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from cvGenerator.models import UserSkills
 from usersApp.models import RecruiteeUser
 from usersApp.serializers import RecruiteeUserSerializer
 from .models import Job, Skill, JobSkills, Application
 from .serializers import JobSerializer, SkillSerializer, JobSkillsSerializer, ApplicationSerializer
-from django.db.models import Q
+from django.db.models import Q, Count
+
 
 class JobListView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
@@ -185,3 +187,35 @@ def update_application(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def search_jobs(request):
+    user = request.user
+    try:
+        recruitee_user = RecruiteeUser.objects.get(user_ptr_id=user.pk)
+    except RecruiteeUser.DoesNotExist:
+        return Response({"detail": "RecruiteeUser not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    user_skills_ids = UserSkills.objects.filter(recruitee_user=recruitee_user).values_list('skill_id', flat=True)
+
+    if not user_skills_ids:
+        jobs = Job.objects.all()[:20]
+        serializer = JobSerializer(jobs, many=True)
+        return Response(serializer.data)
+
+    matching_jobs = Job.objects.filter(
+        jobskills__skill__in=user_skills_ids
+    ).annotate(
+        common_skills_count=Count('jobskills__skill', filter=Q(jobskills__skill__in=user_skills_ids))
+    ).filter(
+        common_skills_count__gt=0
+    ).order_by('-common_skills_count')
+
+    if not matching_jobs:
+        matching_jobs = Job.objects.all()[:20]
+
+    serializer = JobSerializer(matching_jobs, many=True)
+    return Response(serializer.data)

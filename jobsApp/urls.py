@@ -5,7 +5,7 @@ from .views import (
     JobListView, JobDetailView,
     SkillListView, SkillDetailView,
     JobSkillsListView, JobSkillsDetailView, FilteredSkillListView, ApplicationListView, ApplicationDetailView,
-    add_application, find_application, get_application, get_job_applicants, update_application
+    add_application, find_application, get_application, get_job_applicants, update_application, search_jobs
 )
 
 urlpatterns = [
@@ -23,5 +23,6 @@ urlpatterns = [
     path('api/get_application/', get_application, name='api_get_application'),
     path('api/get_job_applicants/', get_job_applicants, name='api_get_job_applicants'),
     path('api/update_application/', update_application, name='api_update_application'),
-    path('api/make_quiz/', make_quiz, name='api_make_quiz')
+    path('api/make_quiz/', make_quiz, name='api_make_quiz'),
+    path('api/search_jobs/', search_jobs, name='api_search_jobs')
 ]
