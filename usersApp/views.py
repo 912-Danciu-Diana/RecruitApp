@@ -16,6 +16,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 from django.contrib.auth import get_user_model
 
+from pyresparser import ResumeParser
+from io import BytesIO
+
 
 class RecruiteeUserCreateView(generics.CreateAPIView):
     queryset = RecruiteeUser.objects.all()
@@ -98,3 +101,12 @@ def update_user_cv(request):
         return Response("User's CV updated successfully", status=status.HTTP_200_OK)
     else:
         return Response('No file attached', status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def generate_profile_from_cv(request):
+    resume = request.FILES.get('cv')
+    file_buffer = BytesIO(resume.read())
+    file_buffer.name = resume.name
+    data = ResumeParser(file_buffer).get_extracted_data()
+    return Response(data)
