@@ -4,7 +4,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import SkillSearchComponent from './SkillSearchComponent';
 
 const UserProfileScreen = () => {
-    const { profile, userToken, logout, searchForCompanies, searchForJobs, authenticatedUserSkills, generateCV, downloadCvURL, addCV } = useContext(AuthContext);
+    const { profile, logout, searchForCompanies, searchForJobs, searchForJobsBySkills, authenticatedUserSkills, generateCV, downloadCvURL, addCV } = useContext(AuthContext);
     const navigate = useNavigate();
     const [companySearchTerm, setCompanySearchTerm] = useState('');
     const [jobSearchTerm, setJobSearchTerm] = useState('');
@@ -17,6 +17,11 @@ const UserProfileScreen = () => {
     const handleCloseSkillSearch = () => {
         setIsAddingSkill(false);
     };
+
+    const handleSearchJobsBySkills = async () => {
+        await searchForJobsBySkills();
+        navigate('/search');
+    }
 
     const handleSearchJobs = async () => {
         await searchForJobs(jobSearchTerm);
@@ -41,7 +46,7 @@ const UserProfileScreen = () => {
         event.preventDefault();
         const fileInput = document.getElementById("cvFile");
         const formData = new FormData();
-        if(fileInput.files.length > 0) {
+        if (fileInput.files.length > 0) {
             formData.append('cv', fileInput.files[0]);
             await addCV(formData);
             console.log("CV uploaded successfully");
@@ -125,77 +130,78 @@ const UserProfileScreen = () => {
     return (
         (profile && (
             <div style={profileStyles.container}>
-            <img
-                src={`http://127.0.0.1:8080${profile.cover_photo_url}`}
-                alt={`${profile.username}'s cover`}
-                style={profileStyles.coverPhoto}
-            />
-            <div style={profileStyles.profileInfo}>
                 <img
-                    src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
-                    alt={`${profile.username}'s profile`}
-                    style={profileStyles.profilePic}
+                    src={`http://127.0.0.1:8080${profile.cover_photo_url}`}
+                    alt={`${profile.username}'s cover`}
+                    style={profileStyles.coverPhoto}
                 />
-                <h1 style={profileStyles.profileName}>
-                    {profile.first_name} {profile.last_name}
-                </h1>
-            </div>
-
-            <div style={profileStyles.searchContainer}>
-                <input
-                    type="text"
-                    placeholder="Search for jobs..."
-                    value={jobSearchTerm}
-                    onChange={(e) => setJobSearchTerm(e.target.value)}
-                    style={profileStyles.input}
-                />
-                <button onClick={handleSearchJobs} style={profileStyles.button}>Search Jobs</button>
-                <input
-                    type="text"
-                    placeholder="Search for companies..."
-                    value={companySearchTerm}
-                    onChange={(e) => setCompanySearchTerm(e.target.value)}
-                    style={profileStyles.input}
-                />
-                <button onClick={handleSearchCompanies} style={profileStyles.button}>Search Companies</button>
-
-                <div style={profileStyles.section}>
-                    {profile.cv_url && (
-                        <div><strong>CV:</strong> <a href={`http://127.0.0.1:8080${profile.cv_url}`} target="_blank" rel="noopener noreferrer">View CV</a></div>
-                    )}
-                    {!profile.cv_url && (
-                        <button onClick={handleGenerateAndDownloadCV} style={profileStyles.button}>
-                            Generate CV
-                        </button>
-                    )}
-                    {downloadCvURL && (
-                        <div>
-                            <div><strong>Generated CV: </strong><a href={downloadCvURL} download="Your_CV.pdf">Download CV</a></div>
-                            <form id="cvForm" onSubmit={handleAddCV}>
-                                <input type="file" id="cvFile" name="cv" accept=".pdf" required />
-                                <input type="submit" value="Upload" />
-                            </form>
-                        </div>
-                    )}
-                    {profile.profile_description && <p><strong>About Me:</strong> {profile.profile_description}</p>}
-                    {profile.school && <p><strong>School:</strong> {profile.school}</p>}
-                    {profile.university && <p><strong>University:</strong> {profile.university}</p>}
-                    {profile.work_experience && <p><strong>Work Experience:</strong> {profile.work_experience}</p>}
-                    {
-                        authenticatedUserSkills.length > 0 &&
-                        <div style={profileStyles.section}>
-                            <p><strong>Skills:</strong></p>
-                            {authenticatedUserSkills.map((skill, index) => (
-                                <div key={index}>{skill.skill_name}</div>
-                            ))}
-                        </div>
-                    }
-                    {isAddingSkill && <SkillSearchComponent onClose={handleCloseSkillSearch} />}
-                    <button onClick={handleAddSkillClick} style={profileStyles.button}>Add skill</button>
+                <div style={profileStyles.profileInfo}>
+                    <img
+                        src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                        alt={`${profile.username}'s profile`}
+                        style={profileStyles.profilePic}
+                    />
+                    <h1 style={profileStyles.profileName}>
+                        {profile.first_name} {profile.last_name}
+                    </h1>
                 </div>
-                <button onClick={handleLogout} style={profileStyles.button}>Logout</button>
+
+                <div style={profileStyles.searchContainer}>
+                    <button onClick={handleSearchJobsBySkills} style={profileStyles.button}>Go to jobs</button>
+                    <input
+                        type="text"
+                        placeholder="Search for jobs..."
+                        value={jobSearchTerm}
+                        onChange={(e) => setJobSearchTerm(e.target.value)}
+                        style={profileStyles.input}
+                    />
+                    <button onClick={handleSearchJobs} style={profileStyles.button}>Search Jobs</button>
+                    <input
+                        type="text"
+                        placeholder="Search for companies..."
+                        value={companySearchTerm}
+                        onChange={(e) => setCompanySearchTerm(e.target.value)}
+                        style={profileStyles.input}
+                    />
+                    <button onClick={handleSearchCompanies} style={profileStyles.button}>Search Companies</button>
+
+                    <div style={profileStyles.section}>
+                        {profile.cv_url && (
+                            <div><strong>CV:</strong> <a href={`http://127.0.0.1:8080${profile.cv_url}`} target="_blank" rel="noopener noreferrer">View CV</a></div>
+                        )}
+                        {!profile.cv_url && (
+                            <button onClick={handleGenerateAndDownloadCV} style={profileStyles.button}>
+                                Generate CV
+                            </button>
+                        )}
+                        {downloadCvURL && (
+                            <div>
+                                <div><strong>Generated CV: </strong><a href={downloadCvURL} download="Your_CV.pdf">Download CV</a></div>
+                                <form id="cvForm" onSubmit={handleAddCV}>
+                                    <input type="file" id="cvFile" name="cv" accept=".pdf" required />
+                                    <input type="submit" value="Upload" />
+                                </form>
+                            </div>
+                        )}
+                        {profile.profile_description && <p><strong>About Me:</strong> {profile.profile_description}</p>}
+                        {profile.school && <p><strong>School:</strong> {profile.school}</p>}
+                        {profile.university && <p><strong>University:</strong> {profile.university}</p>}
+                        {profile.work_experience && <p><strong>Work Experience:</strong> {profile.work_experience}</p>}
+                        {
+                            authenticatedUserSkills.length > 0 &&
+                            <div style={profileStyles.section}>
+                                <p><strong>Skills:</strong></p>
+                                {authenticatedUserSkills.map((skill, index) => (
+                                    <div key={index}>{skill.skill_name}</div>
+                                ))}
+                            </div>
+                        }
+                        {isAddingSkill && <SkillSearchComponent onClose={handleCloseSkillSearch} />}
+                        <button onClick={handleAddSkillClick} style={profileStyles.button}>Add skill</button>
+                    </div>
+                    <button onClick={handleLogout} style={profileStyles.button}>Logout</button>
+                </div>
             </div>
-        </div>
         ))
     );
 };

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer, checkIfQuizTaken, calculateScore, getQuizDetails, acceptOrRejectApplicant, generateProfileFromCV } from "../services/apiService";
+import { registerRecruitee, loginUser, fetchUserProfile, searchCompanies, searchJobs, fetchAuthenticatedUserSkills, searchSkills, addSkillToUser, generateUserCV, updateUserCV, applyForJob, findApplication, getApplicationForJob, getApplicantsForJob, fetchUserSkills, acceptOrRejectApplicantForQuiz, postQuiz, postQuestion, postQuizQuestion, postAnswer, checkInterviewExists, getInterview, postUsersAnswer, checkIfQuizTaken, calculateScore, getQuizDetails, acceptOrRejectApplicant, generateProfileFromCV, getJobsBySkills } from "../services/apiService";
 
 export const AuthContext = createContext();
 
@@ -93,7 +93,6 @@ const AuthContextProvider = ({ children }) => {
       setJobs([]);
     } catch (error) {
       console.error("Search for companies failed:", error);
-      // Handle the error appropriately
     }
   }
 
@@ -101,10 +100,22 @@ const AuthContextProvider = ({ children }) => {
     try {
       const foundJobs = await searchJobs(searchTerm);
       setJobs(foundJobs);
+      console.log(foundJobs);
       setCompanies([]);
     } catch (error) {
       console.error("Search for jobs failed:", error);
-      // Handle the error appropriately
+    }
+  }
+
+  const searchForJobsBySkills = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const foundJobs = await getJobsBySkills(token);
+      setJobs(foundJobs);
+      console.log(foundJobs);
+      setCompanies([]);
+    } catch (error) {
+      console.error("Search for jobs by skills failed:", error);
     }
   }
 
@@ -115,7 +126,6 @@ const AuthContextProvider = ({ children }) => {
       setSearchedSkills(skills);
     } catch (error) {
       console.error("Search for skills failed:", error);
-      // Handle the error appropriately
     }
   }
 
@@ -336,7 +346,7 @@ const AuthContextProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, quizTaken, quizScore, quizDetails, profileFromCV, generateProfile, acceptOrRejectCandidate, quizDetailsFunc, calculateQuizScore, setQuizTaken, checkQuizTaken, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
+    <AuthContext.Provider value={{ userToken, profile, companies, jobs, authenticatedUserSkills, searchedSkills, downloadCvURL, applicants, applicantSkills, application, quiz, quizExists, quizTaken, quizScore, quizDetails, profileFromCV, searchForJobsBySkills, generateProfile, acceptOrRejectCandidate, quizDetailsFunc, calculateQuizScore, setQuizTaken, checkQuizTaken, addUsersAnswer, interviewExists, addQuestion, addQuizQuestion, addAnswer, makeQuiz, acceptOrRejectForQuiz, getApplicantSkills, getApplicants, getApplication, hasApplied, addApplication, addCV, generateCV, addUserSkill, searchForSkills, registerRecruiteeUser, login, logout, searchForCompanies, searchForJobs, setJobs }}>
       {children}
     </AuthContext.Provider>
   );

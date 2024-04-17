@@ -79,6 +79,24 @@ export const searchJobs = async (searchTerm) => {
     }
 };
 
+export const getJobsBySkills = async (token) => {
+    try {
+        const response = await fetch(`${baseURL}/jobsApp/api/search_jobs/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Token ${token}`
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Getting jobs by skills failed: ", error);
+        throw error;
+    }
+}
+
 export const fetchAuthenticatedUserSkills = async (token) => {
     try {
         const response = await fetch(`${baseURL}/cv/userskills/`, {
