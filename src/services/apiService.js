@@ -7,6 +7,10 @@ export const registerRecruitee = async (userData) => {
             body: userData
         });
         if (!response.ok) {
+            const errorBody = await response.json();
+            if(errorBody.username == "A user with that username already exists." || errorBody.email == "user with this email already exists.") {
+                throw new Error("User with the same email or username already exists!");
+            }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return await response.json();

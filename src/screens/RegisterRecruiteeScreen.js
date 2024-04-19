@@ -97,7 +97,11 @@ const RegisterRecruiteeScreen = () => {
             navigate('/userprofile');
             setError('');
         } catch (error) {
-            setError("Registration failed. Please check all the fields and try again.");
+            if(error.message.includes("User with the same email or username already exists!")) {
+                setError("A user with the same email or username already exists!");
+            } else {
+                setError("Registration failed. Please check all the fields and try again.");
+            }
         }
     };
 
