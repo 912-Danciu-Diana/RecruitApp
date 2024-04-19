@@ -58,6 +58,7 @@ class UserProfileView(APIView):
         user_data = {
             'id': user.pk,
             'username': user.username,
+            'email': user.email,
             'first_name': user.first_name,
             'last_name': user.last_name,
             'profile_pic_url': user.profile_pic.url,
