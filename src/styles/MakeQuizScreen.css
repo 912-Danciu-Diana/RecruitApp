@@ -1,0 +1,39 @@
+.container {
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+.questionContainer {
+    margin-bottom: 15px;
+    background-color: #f4f4f8;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox {
+    margin-right: 5px;
+}

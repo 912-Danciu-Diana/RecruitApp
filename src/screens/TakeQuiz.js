@@ -1,22 +1,23 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import '../styles/TakeQuiz.css';  
 
 const TakeQuiz = () => {
     const { quiz, addUsersAnswer } = useContext(AuthContext);
     const navigate = useNavigate();
     const [userAnswers, setUserAnswers] = useState(
-        quiz?.quiz_questions?.map((quizquestion) => ({
+        quiz?.quiz_questions?.map(quizquestion => ({
             id: quizquestion.id,
             questionId: quizquestion.question.id,
-            answers: quizquestion.question.answers.map((answer) => ({
+            answers: quizquestion.question.answers.map(answer => ({
                 answerId: answer.id,
                 isCorrect: false,
             })),
         })) || []
     );
 
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false); 
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const handleAnswerChange = (questionId, answerId, isCorrect) => {
         setUserAnswers(userAnswers.map(question =>
             question.questionId === questionId ? {
@@ -42,17 +43,18 @@ const TakeQuiz = () => {
     };
 
     return (
-        <div>
+        <div className="takeQuizContainer">
             {showSuccessMessage === false && quiz && quiz.quiz_questions && quiz.quiz_questions.length > 0 ? (
                 quiz.quiz_questions.map((quizQuestion, index) => (
-                    <div key={quizQuestion.id}>
-                        <h3>Question {index + 1}: {quizQuestion.question.question}</h3>
-                        <ul>
+                    <div key={quizQuestion.id} className="questionItem">
+                        <h3 className="questionHeader">Question {index + 1}: {quizQuestion.question.question}</h3>
+                        <ul className="questionList">
                             {quizQuestion.question.answers.map((answer) => (
-                                <li key={answer.id}>
+                                <li key={answer.id} className="answerLabel">
                                     <label>
                                         <input
                                             type="checkbox"
+                                            className="inputCheckbox"
                                             checked={userAnswers.find(q => q.questionId === quizQuestion.question.id)?.answers.find(a => a.answerId === answer.id)?.isCorrect || false}
                                             onChange={(e) => handleAnswerChange(quizQuestion.question.id, answer.id, e.target.checked)}
                                         />
@@ -66,9 +68,8 @@ const TakeQuiz = () => {
             ) : (
                 <p>No questions available for this quiz.</p>
             )}
-            {showSuccessMessage === false && <button onClick={handleSubmitQuiz}>Submit Quiz</button>}
-            {showSuccessMessage && <p>Quiz submitted successfully!</p>} 
-            <button onClick={() => navigate(-1)}>Go back</button>
+            {showSuccessMessage === false && <button className="submitButton" onClick={handleSubmitQuiz}>Submit Quiz</button>}
+            {showSuccessMessage && <p className="successMessage">Quiz submitted successfully!</p>}
         </div>
     );
 };

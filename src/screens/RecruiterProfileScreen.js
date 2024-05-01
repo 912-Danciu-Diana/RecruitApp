@@ -74,7 +74,7 @@ const RecruiterProfileScreen = () => {
             border: 'none',
             borderRadius: '5px',
             cursor: 'pointer',
-            background: 'linear-gradient(to right, #6a11cb 0%, #2575fc 100%)',
+            background: '#000',
             color: 'white',
             fontSize: '1em',
             boxShadow: '0 2px 4px rgba(0,0,0,0.2)',

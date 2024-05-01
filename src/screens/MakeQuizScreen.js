@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import '../styles/MakeQuizScreen.css';  
 
 const MakeQuizScreen = () => {
     const { quiz, addQuestion, addQuizQuestion, addAnswer } = useContext(AuthContext);
@@ -41,17 +42,17 @@ const MakeQuizScreen = () => {
 
     if (submissionSuccess) {
         return (
-            <div>
+            <div className="container" style={{ textAlign: 'center' }}>
                 <p>Quiz submitted successfully!</p>
-                <button onClick={() => navigate(-1)}>Go Back</button>
+                <button className="button" onClick={() => navigate(-1)}>Go Back</button>
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="container">
             {questions.map((q, index) => (
-                <div key={index}>
+                <div key={index} className="questionContainer">
                     <p>Q: {q.question}</p>
                     {q.answers.map((a, aIndex) => (
                         <p key={aIndex}>{`A${aIndex + 1}: ${a.answer} ${a.isCorrect ? '(Correct)' : ''}`}</p>
@@ -59,18 +60,21 @@ const MakeQuizScreen = () => {
                 </div>
             ))}
             <input
+                className="input"
                 value={currentQuestion}
                 onChange={(e) => setCurrentQuestion(e.target.value)}
                 placeholder="Enter your question here"
             />
             {answers.map((answer, index) => (
-                <div key={index}>
+                <div key={index} className="checkboxContainer">
                     <input
+                        className="input"
                         value={answer.answer}
                         onChange={(e) => handleAnswerChange(index, e.target.value)}
                         placeholder={`Answer ${index + 1}`}
                     />
                     <input
+                        className="checkbox"
                         type="checkbox"
                         checked={answer.isCorrect}
                         onChange={(e) => handleAnswerChange(index, answer.answer, e.target.checked)}
@@ -78,8 +82,8 @@ const MakeQuizScreen = () => {
                     Correct
                 </div>
             ))}
-            <button onClick={addCurrentQuestion}>Add question</button>
-            <button onClick={handleSubmitQuiz}>Submit Quiz</button>
+            <button className="button" onClick={addCurrentQuestion}>Add question</button>
+            <button className="button" onClick={handleSubmitQuiz}>Submit Quiz</button>
         </div>
     );
 };

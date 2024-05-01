@@ -1,6 +1,7 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import '../styles/ViewTakenQuiz.css'; 
 
 const ViewTakenQuiz = () => {
     const navigate = useNavigate();
@@ -19,31 +20,25 @@ const ViewTakenQuiz = () => {
     }
 
     return (
-        <div>
-            <h2>Quiz Questions</h2>
+        <div className="container">
+            <h2 className="header">Quiz Questions</h2>
             {quizDetails.quiz_questions.map((quizQuestion, index) => (
-                <div key={index}>
+                <div key={index} className="question">
                     <p>{quizQuestion.question}</p>
                     {quizQuestion.user_answers.map((userAnswer, answerIndex) => (
-                        <div key={answerIndex}>
-                            <span>{userAnswer.answer}</span>
+                        <span key={answerIndex} className="answer">
+                            {userAnswer.answer}
                             {userAnswer.user_marked_correct ? (
-                                <span style={{ color: 'green' }}>✓ </span>
+                                <span className="correct"> ✓ [Correct Answer]</span>
                             ) : (
-                                <span style={{ color: 'red' }}>✗</span>
+                                <span className="incorrect"> ✗ [Wrong Answer]</span>
                             )}
-                            {userAnswer.actual_is_correct && (
-                                <span style={{ color: 'green' }}> [Correct Answer]</span>
-                            )}
-                            {userAnswer.actual_is_correct === false && (
-                                <span style={{ color: 'red' }}> [Wrong Answer]</span>
-                            )}
-                        </div>
+                        </span>
                     ))}
                 </div>
             ))}
-            <p>Total score: {score}%</p>
-            <button onClick={() => navigate(-1)}>Go back</button>
+            <p className="score">Total score: {score}%</p>
+            <button className="goBackButton" onClick={() => navigate(-1)}>Go back</button>
         </div>
     );
 };
