@@ -175,7 +175,7 @@ def calculate_quiz_score(request, interview_id):
                 correct_answers_count += 1
 
 
-    score_percentage = (correct_answers_count / total_answers_count) * 100
+    score_percentage = int((correct_answers_count / total_answers_count) * 100)
 
     return Response({"total_answers": total_answers_count, "correct_answers": correct_answers_count, "score_percentage": score_percentage})
 
