@@ -325,6 +325,26 @@ export const postQuiz = async(token, jobId, applicantId) => {
     }
 }
 
+export const postAIGeneratedQuiz = async(token, jobId, applicantId, topic) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/generate_quiz/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify({job: jobId, recruitee: applicantId, topic: topic}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Generating ai quiz failed:", error);
+        throw error;
+    }
+}
+
 export const postQuestion = async(question) => {
     try {
         const response = await fetch(`${baseURL}/interviewsApp/api/questions/`, {

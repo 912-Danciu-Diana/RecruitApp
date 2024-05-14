@@ -1,15 +1,17 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import '../styles/UserProfile.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
+import '../styles/ApplicantScreen.css';
 
 const ApplicantScreen = () => {
     const location = useLocation();
     const { applicant, job } = location.state || {};
-    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore, acceptOrRejectCandidate } = useContext(AuthContext);
+    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, generateAiQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore, acceptOrRejectCandidate } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [topic, setTopic] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -66,6 +68,18 @@ const ApplicantScreen = () => {
         navigate('/makequizscreen')
     }
 
+    const handleGenerateAiQuiz = () => {
+        setIsModalOpen(true);
+    }
+
+    const submitAiQuiz = async () => {
+        setLoading(true);
+        await generateAiQuiz(job.id, applicant.id, topic);
+        setLoading(false);
+        setIsModalOpen(false);
+        window.location.reload();
+    }
+
     const renderApplicationStatus = () => {
         if (!application || application.length === 0) {
             return null;
@@ -95,7 +109,10 @@ const ApplicantScreen = () => {
         }
 
         if (currentApplication.acceptedForQuiz === true && !quizExists) {
-            return <button onClick={handleMakeQuiz}>Make a quiz</button>;
+            return <div>
+                <button onClick={handleMakeQuiz}>Make a quiz</button>
+                <button onClick={handleGenerateAiQuiz}>Ai generated quiz</button>
+            </div>;
         }
 
         return (
@@ -150,7 +167,26 @@ const ApplicantScreen = () => {
                         </div>
                         <button onClick={() => navigate('/recruiterjobprofile', { state: { job: job } })}>Back</button>
                     </div>
-                </div>                
+                </div>
+                <Modal
+                    isOpen={isModalOpen}
+                    onRequestClose={() => setIsModalOpen(false)}
+                    contentLabel="Provide Topic for AI Generated Quiz"
+                    className="Modal"
+                    overlayClassName="Overlay"
+                >
+                    <h2>Provide Topic for AI Quiz</h2>
+                    <input
+                        type="text"
+                        value={topic}
+                        onChange={(e) => setTopic(e.target.value)}
+                        placeholder="Enter topic"
+                    />
+                    <button onClick={submitAiQuiz} disabled={loading}>
+                        {loading ? 'Generating...' : 'Generate Quiz'}
+                    </button>
+                    <button onClick={() => setIsModalOpen(false)}>Close</button>
+                </Modal>
             </div>
         ))
     );
