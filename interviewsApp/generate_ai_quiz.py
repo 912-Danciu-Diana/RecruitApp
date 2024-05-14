@@ -7,19 +7,21 @@ openai.api_key = OPENAI_API_KEY
 
 
 def generate_quiz(topic):
-    prompt = (f'Please provide 10 questions each with four answers (one or more can be correct) in the form:\n'
-              f'In Java, which of the following methods is used to compare two strings for equality?\n'
-              f'A. == CORRECT\nB. equals() CORRECT\nC. equal() FALSE\nD. compareTo() FALSE\n'
-              f'Please only provide the questions and the answers exactly like in the answer '
-              f'above and nothing else. Thank you. The question should regard the following topic please: {topic}.')
+    messages = [
+        {"role": "user", "content": (f'Generate 10 questions, each with 4 answers (one or more correct). Format:\n'
+                                     f'Which method compares two strings for equality?\n'
+                                     f'A. == CORRECT\nB. equals() CORRECT\nC. equal() FALSE\nD. compareTo() FALSE\n'
+                                     f'Only provide questions and answers. Topic: {topic}.')}
+    ]
 
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=prompt,
-        max_tokens=90000
+    response = openai.ChatCompletion.create(
+        model="gpt-4o",
+        messages=messages,
+        max_tokens=1500
     )
+    print(response)
 
-    return response.choices[0].text.strip()
+    return response.choices[0].message['content'].strip()
 
 
 def parse_quiz(quiz_text):
@@ -37,6 +39,7 @@ def parse_quiz(quiz_text):
             correctness = line.split()[-1]
             answer = line.rsplit(' ', 1)[0]
             answer = answer.split('. ', 1)[-1]
+            answer = re.sub(r'\s+(CORRECT|FALSE)$', '', answer)
             current_question['answers'].append({'answer': answer, 'is_correct': correctness == "CORRECT"})
 
     if current_question:

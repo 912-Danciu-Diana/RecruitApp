@@ -57,20 +57,58 @@ class QuizQuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def generate_quiz_api(request):
+def generate_ai_quiz(request):
+    company_user = request.user
+    try:
+        recruiter = CompanyUser.objects.get(id=company_user.pk)
+    except CompanyUser.DoesNotExist:
+        return Response({"detail": "Unauthorized. Only recruiters can perform this action."},
+                        status=status.HTTP_403_FORBIDDEN)
+
     topic = request.data.get('topic')
+    job_id = request.data.get('job')
+    recruitee_id = request.data.get('recruitee')
+
     if not topic:
         return Response({"detail": "Topic is required."}, status=status.HTTP_400_BAD_REQUEST)
+    if not job_id:
+        return Response({"detail": "Job id is required."}, status=400)
+    if not recruitee_id:
+        return Response({"detail": "Recruitee id is required."}, status=400)
+
+    try:
+        job = Job.objects.get(id=job_id)
+    except Job.DoesNotExist:
+        return Response({"detail": "Job not found."}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        recruitee_user = RecruiteeUser.objects.get(user_ptr_id=recruitee_id)
+    except RecruiteeUser.DoesNotExist:
+        return Response({"detail": "RecruiteeUser not found."}, status=status.HTTP_404_NOT_FOUND)
+
     raw_quiz = generate_quiz(topic)
     quiz_data = parse_quiz(raw_quiz)
+
+    interview_data = {
+        'job': job.pk,
+        'company_user': recruiter.pk,
+        'recruitee_user': recruitee_user.pk,
+        'interview_type': 'QUIZ'
+    }
+    interview_serializer = InterviewSerializer(data=interview_data)
+    if interview_serializer.is_valid():
+        interview = interview_serializer.save(job=job, company_user=recruiter, recruitee_user=recruitee_user)
+    else:
+        return Response(interview_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     saved_questions = []
     for q in quiz_data:
         question_obj = Question.objects.create(question=q['question'])
         for a in q['answers']:
             Answer.objects.create(question=question_obj, answer=a['answer'], is_correct=a['is_correct'])
         saved_questions.append(question_obj.id)
+        QuizQuestion.objects.create(quiz_interview=interview, question=question_obj)
 
-    return Response({"question_ids": saved_questions}, status=status.HTTP_201_CREATED)
+    return Response({"interview_id": interview.id, "question_ids": saved_questions}, status=status.HTTP_201_CREATED)
 
 
 class UsersAnswerListView(generics.ListCreateAPIView):
