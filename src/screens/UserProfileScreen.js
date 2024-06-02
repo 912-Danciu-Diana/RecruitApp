@@ -69,10 +69,10 @@ const UserProfileScreen = () => {
                     <div class="left__container">
                         <img className='logo' onClick={handleSearchJobsBySkills} src={logo} alt="logo" />
                         <img
-                                src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
-                                alt={`${profile.username}'s profile`}
-                                className='me'
-                                onClick={() => navigate('/userprofile')}
+                            src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                            alt={`${profile.username}'s profile`}
+                            className='me'
+                            onClick={() => navigate('/userprofile')}
                         />
                     </div>
                     <div class="right__container">
@@ -90,7 +90,7 @@ const UserProfileScreen = () => {
                             onChange={(e) => setCompanySearchTerm(e.target.value)}
                         />
                         <button onClick={handleSearchCompanies} type="submit"><FontAwesomeIcon icon={faSearch} /></button>
-                        <IoIosLogOut onClick={handleLogout} className="logout"/>
+                        <IoIosLogOut onClick={handleLogout} className="logout" />
                     </div>
                 </div>
 

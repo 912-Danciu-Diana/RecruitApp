@@ -1,13 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import '../styles/user-profile.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { IoIosLogOut } from "react-icons/io";
+import logo from '../assets/logo.png'
 
 const JobProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { job } = location.state || {};
-    const { jobSkills, getJobSkills, profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken, setQuizTaken, calculateQuizScore, quizScore } = useContext(AuthContext);
+    const { searchForCompanies, searchForJobs, searchForJobsBySkills, jobSkills, getJobSkills, profile, hasApplied, addApplication, application, getApplication, interviewExists, quiz, checkQuizTaken, quizTaken, setQuizTaken, calculateQuizScore, quizScore, logout } = useContext(AuthContext);
     const [applicationExists, setApplicationExists] = useState(null);
+    const [companySearchTerm, setCompanySearchTerm] = useState('');
+    const [jobSearchTerm, setJobSearchTerm] = useState('');
 
 
     useEffect(() => {
@@ -81,11 +88,31 @@ const JobProfile = () => {
         }
 
         if (!applicationExists) {
-            return <button onClick={() => handleAddApplication()}>Apply for this job</button>;
+            return <button style={{ display: 'block', marginBottom: '1px' }} onClick={() => handleAddApplication()}>Apply for this job</button>;
         }
 
         return null;
     }
+
+    const handleSearchJobsBySkills = async () => {
+        await searchForJobsBySkills();
+        navigate('/search');
+    }
+
+    const handleSearchJobs = async () => {
+        await searchForJobs(jobSearchTerm);
+        navigate('/search');
+    };
+
+    const handleSearchCompanies = async () => {
+        await searchForCompanies(companySearchTerm);
+        navigate('/search');
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+    };
 
     return (
         <div className='body'>
@@ -117,25 +144,26 @@ const JobProfile = () => {
                     <IoIosLogOut onClick={handleLogout} className="logout" />
                 </div>
             </div>
-            
-            <img
-                src={job.cover_photo}
-                alt={`${job.name}'s cover`}
-                style={profileStyles.coverPhoto}
-            />
-            <div style={profileStyles.profileInfo}>
-                <img
-                    src={job.profile_pic}
-                    alt={`${job.name}'s profile`}
-                    style={profileStyles.profilePic}
-                />
-                <h1 style={profileStyles.profileName}>
-                    {job.name}
-                </h1>
-            </div>
 
-            <div style={profileStyles.searchContainer}>
-                <div style={profileStyles.section}>
+            <header style={{ background: `url(${job.cover_photo}) no-repeat 50% 20% / cover` }}></header>
+
+            <div class="cols__container">
+                <div class="left__col">
+                    <div class="img__container">
+                        <img
+                            src={job.profile_pic}
+                            alt={`${job.name}'s profile`}
+
+                        />
+                        <span></span>
+                    </div>
+                    <h2>
+                        {job.name}
+                    </h2>
+                    {job.location && <p><strong>Location:</strong> {job.location.city}, {job.location.country}</p>}
+                </div>
+
+                <div class="right__col">
                     {job.company && (
                         <p onClick={() => navigate('/companyprofile', { state: { company: job.company } })}
                             style={{ cursor: 'pointer' }}>
@@ -144,7 +172,6 @@ const JobProfile = () => {
                     )}
                     {job.description && <p><strong>Description:</strong> {job.description}</p>}
                     {job.is_remote && <p><strong>Remote</strong></p>}
-                    {job.location && <p><strong>Location:</strong> {job.location.city}, {job.location.country}</p>}
                     {renderApplicationStatus()}
                     {jobSkills.length > 0 && (
                         <div>
@@ -154,9 +181,11 @@ const JobProfile = () => {
                             ))}
                         </div>
                     )}
+                    <button onClick={() => navigate(-1)}>Go back</button>
+
                 </div>
-                <button style={profileStyles.button} onClick={() => navigate(-1)}>Go back</button>
             </div>
+
         </div>
     );
 }
