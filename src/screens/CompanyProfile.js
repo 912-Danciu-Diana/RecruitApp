@@ -1,12 +1,19 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import '../styles/user-profile.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { IoIosLogOut } from "react-icons/io";
+import logo from '../assets/logo.png'
 
 const CompanyProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { company } = location.state || {};
-    const { jobs, searchForJobs, profile } = useContext(AuthContext);
+    const { jobs, searchForJobs, profile, searchForCompanies, searchForJobsBySkills, logout } = useContext(AuthContext);
+    const [companySearchTerm, setCompanySearchTerm] = useState('');
+    const [jobSearchTerm, setJobSearchTerm] = useState('');
 
     useEffect(() => {
         async function getJobs() {
@@ -23,83 +30,24 @@ const CompanyProfile = () => {
         }
     }
 
-    const handleBackNavigation = () => {
-        if ('university' in profile) {
-            navigate(`/search`);
-        } else {
-            navigate(`/recruiterprofile`)
-        }
+    const handleSearchJobsBySkills = async () => {
+        await searchForJobsBySkills();
+        navigate('/search');
     }
 
-    const profileStyles = {
-        container: {
-            textAlign: 'center',
-            position: 'relative',
-            background: 'linear-gradient(to bottom, #ffffff 0%,#f0f4f7 100%)',
-            padding: '20px',
-            minHeight: '100vh',
-        },
-        coverPhoto: {
-            width: '100%',
-            height: '150px',
-            borderRadius: '15px',
-            marginBottom: '20px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-        },
-        profileInfo: {
-            position: 'absolute',
-            top: '100px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginBottom: '20px',
-            zIndex: 1,
-        },
-        profilePic: {
-            width: '120px',
-            height: '120px',
-            borderRadius: '60px',
-            border: '5px solid white',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        },
-        profileName: {
-            margin: '10px 0',
-            fontSize: '24px',
-            fontWeight: 'bold',
-            color: '#333',
-        },
-        section: {
-            background: '#fff',
-            padding: '15px',
-            borderRadius: '10px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-            margin: '10px 0',
-            textAlign: 'left',
-        },
-        input: {
-            margin: '5px',
-            padding: '10px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            width: 'calc(100% - 22px)',
-            marginBottom: '20px',
-        },
-        button: {
-            margin: '10px',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            background: '#000',
-            color: 'white',
-            fontSize: '1em',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        },
-        searchContainer: {
-            paddingTop: '80px',
-        },
+    const handleSearchJobs = async () => {
+        await searchForJobs(jobSearchTerm);
+        navigate('/search');
+    };
+
+    const handleSearchCompanies = async () => {
+        await searchForCompanies(companySearchTerm);
+        navigate('/search');
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
     };
 
     const itemStyles = {
@@ -160,28 +108,55 @@ const CompanyProfile = () => {
     };
 
     return (
-        <div style={profileStyles.container}>
-            <img
-                src={company.cover_photo}
-                alt={`${company.name}'s cover`}
-                style={profileStyles.coverPhoto}
-            />
-            <div style={profileStyles.profileInfo}>
-                <img
-                    src={company.profile_pic}
-                    alt={`${company.name}'s profile`}
-                    style={profileStyles.profilePic}
-                />
-                <h1 style={profileStyles.profileName}>
-                    {company.name}
-                </h1>
+        <div className='body'>
+            <div class="search__nav">
+                <div class="left__container">
+                    <img className='logo' onClick={handleSearchJobsBySkills} src={logo} alt="logo" />
+                    <img
+                        src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                        alt={`${profile.username}'s profile`}
+                        className='me'
+                        onClick={() => navigate('/userprofile')}
+                    />
+                </div>
+                <div class="right__container">
+                    <input
+                        type="text"
+                        placeholder="Search jobs..."
+                        value={jobSearchTerm}
+                        onChange={(e) => setJobSearchTerm(e.target.value)}
+                    />
+                    <button onClick={handleSearchJobs} type="submit"><FontAwesomeIcon icon={faSearch} /></button>
+                    <input
+                        type="text"
+                        placeholder="Search companies..."
+                        value={companySearchTerm}
+                        onChange={(e) => setCompanySearchTerm(e.target.value)}
+                    />
+                    <button onClick={handleSearchCompanies} type="submit"><FontAwesomeIcon icon={faSearch} /></button>
+                    <IoIosLogOut onClick={handleLogout} className="logout" />
+                </div>
             </div>
 
-            <div style={profileStyles.searchContainer}>
-                <div style={profileStyles.section}>
+            <header style={{ background: `url(${company.cover_photo}) no-repeat 50% 20% / cover` }}></header>
+
+            <div class="cols__container">
+                <div class="left__col">
+                    <div class="img__container">
+                        <img
+                            src={company.profile_pic}
+                            alt={`${company.name}'s profile`}
+
+                        />
+                        <span></span>
+                    </div>
+                    <h2>
+                        {company.name}
+                    </h2>
                     {company.location && <p><strong>Location:</strong> {company.location.city}, {company.location.country}</p>}
                 </div>
-                <div style={profileStyles.section}>
+
+                <div class="right__col">
                     <p><strong>Jobs:</strong></p>
                     {jobs.map((job, index) => (
                         <div key={index} style={itemStyles.container} onClick={() => handleJobNavigation(job)}>
@@ -192,9 +167,10 @@ const CompanyProfile = () => {
                             </div>
                         </div>
                     ))}
+                    <button onClick={() => navigate(-1)}>Go back</button>
                 </div>
-                <button onClick={() => handleBackNavigation()} style={profileStyles.button}>Back</button>
             </div>
+
         </div>
     );
 }
