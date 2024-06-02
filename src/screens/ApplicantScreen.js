@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import Modal from 'react-modal';
-import '../styles/ApplicantScreen.css';
+import '../styles/applicant-screen.css';
+import { IoIosLogOut } from "react-icons/io";
+import logo from '../assets/logo.png'
 
 const ApplicantScreen = () => {
     const location = useLocation();
     const { applicant, job } = location.state || {};
-    const { applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, generateAiQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore, acceptOrRejectCandidate } = useContext(AuthContext);
+    const { logout, profile, applicantSkills, getApplicantSkills, getApplication, acceptOrRejectForQuiz, application, makeQuiz, generateAiQuiz, quiz, quizExists, interviewExists, quizTaken, checkQuizTaken, setQuizTaken, calculateQuizScore, quizScore, acceptOrRejectCandidate } = useContext(AuthContext);
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [topic, setTopic] = useState('');
@@ -80,6 +82,16 @@ const ApplicantScreen = () => {
         window.location.reload();
     }
 
+    const handleLogout = async () => {
+        await logout();
+        navigate('/');
+    };
+
+    if (!profile) {
+        return <div>Loading...</div>;
+    }
+
+
     const renderApplicationStatus = () => {
         if (!application || application.length === 0) {
             return null;
@@ -126,6 +138,21 @@ const ApplicantScreen = () => {
     return (
         (applicant && (
             <div className='body'>
+                <div class="search__nav">
+                    <div class="left__container">
+                        <img className='logo' src={logo} alt="logo" />
+                        <img
+                            src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                            alt={`${profile.username}'s profile`}
+                            className='me'
+                            onClick={() => navigate('/recruiterprofile')}
+                        />
+                    </div>
+                    <div class="right__container">
+                        <IoIosLogOut onClick={handleLogout} className="logout" />
+                    </div>
+                </div>
+
                 <header style={{ background: `url(${`http://127.0.0.1:8080${applicant.cover_photo}`}) no-repeat 50% 20% / cover` }}></header>
 
                 <div class="cols__container">
