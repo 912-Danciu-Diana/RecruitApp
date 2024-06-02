@@ -1,116 +1,117 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-
+import '../styles/user-profile.css';
+import { IoIosLogOut } from "react-icons/io";
+import logo from '../assets/logo.png'
 
 const RecruiterProfileScreen = () => {
-    const { profile, logout } = useContext(AuthContext);
+    const { profile, jobs, searchForJobs, logout } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        async function getJobs() {
+            if(profile) {
+                await searchForJobs(profile.company.name);
+            }
+        }
+        getJobs();
+    });
 
     const handleLogout = async () => {
         await logout();
         navigate('/');
     };
 
-    const profileStyles = {
+    const itemStyles = {
         container: {
-            textAlign: 'center',
-            position: 'relative',
-            background: 'linear-gradient(to bottom, #ffffff 0%,#f0f4f7 100%)',
-            padding: '20px',
-            minHeight: '100vh',
-        },
-        coverPhoto: {
-            width: '100%',
-            height: '150px',
-            borderRadius: '15px',
-            marginBottom: '50px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-        },
-        profileInfo: {
-            position: 'absolute',
-            top: '100px',
-            left: '50%',
-            transform: 'translateX(-50%)',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             marginBottom: '20px',
-            zIndex: 1,
-        },
-        profilePic: {
-            width: '120px',
-            height: '120px',
-            borderRadius: '60px',
-            border: '5px solid white',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        },
-        profileName: {
-            margin: '10px 0',
-            fontSize: '24px',
-            fontWeight: 'bold',
-            color: '#333',
-        },
-        section: {
             background: '#fff',
             padding: '15px',
             borderRadius: '10px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-            margin: '10px 0',
-            textAlign: 'left',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             cursor: 'pointer',
         },
-        input: {
-            margin: '5px',
-            padding: '10px',
-            border: '1px solid #ddd',
-            borderRadius: '5px',
-            width: 'calc(100% - 22px)', 
-            marginBottom: '20px',
+        profilePic: {
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            marginRight: '15px',
+            objectFit: 'cover',
         },
-        button: {
-            margin: '10px',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
+        textContainer: {
+            display: 'flex',
+            flexDirection: 'column',
             cursor: 'pointer',
-            background: '#000',
-            color: 'white',
-            fontSize: '1em',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         },
-        searchContainer: {
-            paddingTop: '80px',
+        name: {
+            fontSize: '1.2em',
+            fontWeight: 'bold',
+            marginBottom: '5px',
         },
+        location: {
+            fontSize: '0.9em',
+            color: '#666',
+        },
+
+
     };
 
-    return (
-        (profile && (
-            <div style={profileStyles.container}>
-            <img
-                src={`http://127.0.0.1:8080${profile.cover_photo_url}`}
-                alt={`${profile.username}'s cover`}
-                style={profileStyles.coverPhoto}
-            />
-            <div style={profileStyles.profileInfo}>
-                <img
-                    src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
-                    alt={`${profile.username}'s profile`}
-                    style={profileStyles.profilePic}
-                />
-                <h1 style={profileStyles.profileName}>
-                    {profile.first_name} {profile.last_name}
-                </h1>
-            </div>
+    if (!profile) {
+        return <div>Loading...</div>; 
+    }
 
-            <div style={profileStyles.searchContainer}>
-                <div style={profileStyles.section} onClick={() =>  navigate(`/companyprofile`, {state: { company: profile.company } })}>
-                    {profile.company && <p><strong>Company:</strong> {profile.company.name }</p>}
+    return (
+        <div className='body'>
+            <div class="search__nav">
+                <div class="left__container">
+                    <img className='logo' src={logo} alt="logo" />
+                    <img
+                        src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                        alt={`${profile.username}'s profile`}
+                        className='me'
+                        onClick={() => navigate('/recruiterprofile')}
+                    />
                 </div>
-                <button onClick={handleLogout} style={profileStyles.button}>Logout</button>
+                <div class="right__container">
+                    <IoIosLogOut onClick={handleLogout} className="logout" />
+                </div>
+            </div>
+            <header style={{ background: `url(${profile.company.cover_photo}) no-repeat 50% 20% / cover` }}></header>
+
+            <div className="cols__container">
+                <div className="left__col">
+                    <div class="img__container">
+                        <img
+                            src={profile.company.profile_pic}
+                            alt={`${profile.company.name}'s profile`}
+
+                        />
+                        <span></span>
+                    </div>
+                    <h2>
+                        {profile.company.name}
+                    </h2>
+                    <p><strong>{profile.first_name} {profile.last_name}</strong></p>
+                    {profile.company.location && <p><strong>Location:</strong> {profile.company.location.city}, {profile.company.location.country}</p>}
+                </div>
+
+                <div className="right__col">
+                    <p><strong>Jobs:</strong></p>
+                    {jobs.map((job, index) => (
+                        <div key={index} style={itemStyles.container} onClick={() => navigate('/recruiterjobprofile', { state: { job } })}>
+                            <img src={job.profile_pic} alt={job.name} style={itemStyles.profilePic} />
+                            <div style={itemStyles.textContainer}>
+                                <span style={itemStyles.name}>{job.name}</span>
+                                <span style={itemStyles.location}>Location: {job.location.city}, {job.location.country}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-        ))
     );
 }
 
