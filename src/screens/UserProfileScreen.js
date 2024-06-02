@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import SkillSearchComponent from './SkillSearchComponent';
-import '../styles/UserProfile.css';
+import '../styles/user-profile.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import logo from '../assets/logo.png'
+
 
 const UserProfileScreen = () => {
     const { profile, logout, searchForCompanies, searchForJobs, searchForJobsBySkills, authenticatedUserSkills, generateCV, downloadCvURL, addCV } = useContext(AuthContext);
@@ -64,9 +66,13 @@ const UserProfileScreen = () => {
             <div className='body'>
                 <div class="search__nav">
                     <div class="left__container">
-                        <a href="#" onClick={handleLogout} className="nav-link">Logout</a>
-                        <a href="#" onClick={handleSearchJobsBySkills} className="nav-link">Home</a>
-                        <a href="#" onClick={() => navigate('/userprofile')} class="nav-link">Profile</a>
+                        <img className='logo' onClick={handleSearchJobsBySkills} src={logo} alt="logo" />
+                        <img
+                                src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                                alt={`${profile.username}'s profile`}
+                                className='me'
+                                onClick={() => navigate('/userprofile')}
+                        />
                     </div>
                     <div class="right__container">
                         <input
@@ -83,6 +89,7 @@ const UserProfileScreen = () => {
                             onChange={(e) => setCompanySearchTerm(e.target.value)}
                         />
                         <button onClick={handleSearchCompanies} type="submit"><FontAwesomeIcon icon={faSearch} /></button>
+                        <a href="#" onClick={handleLogout} className="nav-link">Logout</a>
                     </div>
                 </div>
 

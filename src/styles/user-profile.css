@@ -70,6 +70,25 @@ body {
   background-color: rgb(25, 24, 24);
 }
 
+.search__nav .left__container .logo {
+  width: 80px;
+  height: 40px;
+}
+
+.search__nav .left__container .logo:hover {
+  cursor: pointer;
+} 
+
+.search__nav .left__container .me {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.search__nav .left__container .me:hover {
+  cursor: pointer;
+} 
+
 ul {
   list-style-type: none;
   margin: 0;
