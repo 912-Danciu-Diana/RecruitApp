@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import '../styles/ViewTakenQuiz.css'; 
+import '../styles/view-taken-quiz.css'; 
 
 const ViewTakenQuiz = () => {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const ViewTakenQuiz = () => {
             <h2 className="header">Quiz Questions</h2>
             {quizDetails.quiz_questions.map((quizQuestion, index) => (
                 <div key={index} className="question">
-                    <p>{quizQuestion.question}</p>
+                    <p>Question {index + 1}: {quizQuestion.question}</p>
                     {quizQuestion.user_answers.map((userAnswer, answerIndex) => (
                         <span key={answerIndex} className="answer">
                             {userAnswer.answer}

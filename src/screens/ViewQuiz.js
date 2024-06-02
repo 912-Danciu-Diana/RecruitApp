@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import '../styles/view-quiz.css';  
+import '../styles/view-quiz.css';
 
 const ViewQuiz = () => {
     const { quiz } = useContext(AuthContext);
@@ -13,6 +13,7 @@ const ViewQuiz = () => {
 
     return (
         <div className="viewQuizContainer">
+            <h2 className="header">Quiz Questions</h2>
             {quiz && quiz.quiz_questions && quiz.quiz_questions.length > 0 ? (
                 quiz.quiz_questions.map((quizQuestion, index) => (
                     <div key={quizQuestion.id} className="quizQuestion">
@@ -29,7 +30,9 @@ const ViewQuiz = () => {
             ) : (
                 <p>No questions available for this quiz.</p>
             )}
-            <button className="goBackButton" onClick={() => navigate(-1)}>Go back</button>
+            <div className="buttonContainer">
+                <button className="goBackButton" onClick={() => navigate(-1)}>Go back</button>
+            </div>
         </div>
     );
 }

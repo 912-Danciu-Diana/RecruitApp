@@ -202,6 +202,9 @@ const AuthContextProvider = ({ children }) => {
       const applicantsForJob = await getApplicantsForJob(jobId);
       setApplicants(applicantsForJob);
       console.log("Get applicants for job successful!");
+      console.log(
+        
+      )
     } catch (error) {
       console.error("Getting applicants for job failed:", error);
     }
