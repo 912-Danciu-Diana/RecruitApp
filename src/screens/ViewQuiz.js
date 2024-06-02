@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import '../styles/ViewQuiz.css';  
+import '../styles/view-quiz.css';  
 
 const ViewQuiz = () => {
     const { quiz } = useContext(AuthContext);
