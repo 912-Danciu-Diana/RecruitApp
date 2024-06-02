@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import '../styles/search-screen.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { IoIosLogOut } from "react-icons/io";
 import logo from '../assets/logo.png'
 
 const SearchScreen = () => {
@@ -59,7 +60,7 @@ const SearchScreen = () => {
                             onChange={(e) => setCompanySearchTerm(e.target.value)}
                         />
                         <button onClick={handleSearchCompanies} type="submit"><FontAwesomeIcon icon={faSearch} /></button>
-                        <a href="#" onClick={handleLogout} className="nav-link">Logout</a>
+                        <IoIosLogOut onClick={handleLogout} className="logout"/>
                     </div>
                 </div>
 
