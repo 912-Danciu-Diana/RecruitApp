@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import loginImg from '../assets/login-img.webp'
 import Textarea from '@mui/joy/Textarea';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const CustomTextField = styled(TextField)({
     '& label.Mui-focused': {
@@ -33,6 +34,7 @@ const RegisterRecruiteeScreen = () => {
     const hiddenProfilePicInput = useRef(null);
     const hiddenCoverPhotoInput = useRef(null);
     const hiddenCvInput = useRef(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const { registerRecruiteeUser, profileFromCV, generateProfile } = useContext(AuthContext);
@@ -41,12 +43,15 @@ const RegisterRecruiteeScreen = () => {
     useEffect(() => {
         const fetchProfileData = async () => {
             if (cv) {
+                setLoading(true);
                 const formData = new FormData();
                 formData.append('cv', cv);
                 try {
-                  await generateProfile(formData);
+                    await generateProfile(formData);
+                    setLoading(false);
                 } catch (error) {
                     console.error("Error generating profile from CV:", error);
+                    setLoading(false);
                 }
             }
         };
@@ -97,7 +102,7 @@ const RegisterRecruiteeScreen = () => {
             navigate('/userprofile');
             setError('');
         } catch (error) {
-            if(error.message.includes("User with the same email or username already exists!")) {
+            if (error.message.includes("User with the same email or username already exists!")) {
                 setError("A user with the same email or username already exists!");
             } else {
                 setError("Registration failed. Please check all the fields and try again.");
@@ -118,7 +123,7 @@ const RegisterRecruiteeScreen = () => {
     };
 
     const styles = {
-        loginContainer: {
+        body: {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
@@ -127,6 +132,14 @@ const RegisterRecruiteeScreen = () => {
             width: '100vw',
             overflow: 'clip',
             fontFamily: 'Helvetica'
+        },
+        leftContainer: {
+            height: '100%',
+            width: '100%',
+            maxWidth: '100%',
+            overflowY: 'scroll',
+            display: 'flex',
+            justifyContent: 'center'
         },
         formContainer: {
             alignSelf: 'flex-start',
@@ -138,7 +151,13 @@ const RegisterRecruiteeScreen = () => {
             alignItems: 'center',
             gap: '1.2em',
             padding: '100px 12%',
-            overflow: 'scroll',
+
+        },
+        title: {
+            marginTop: "1em",
+            fontSize: '1.5em',
+            display: 'flex',
+            gap: '0.8em'
         },
         imageContainer: {
             height: '100%',
@@ -201,116 +220,124 @@ const RegisterRecruiteeScreen = () => {
     };
 
     return (
-        <div style={styles.loginContainer}>
-            <div style={styles.formContainer}>
-                <>
-                    <Button style={styles.button} variant="contained" onClick={handleCvClick} >
-                        Upload your cv and autofill the fields
-                    </Button>
-                    <input
-                        style={{ display: "none" }}
-                        type="file"
-                        onChange={e => handleCVChange(e, setCv)}
-                        ref={hiddenCvInput}
-                    />
-                    {cv && <p>Uploaded file: {cv.name}</p>}
-                </>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    label="Username "
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    required
-                /></div>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    label="Email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    type="email"
-                    required
-                /></div>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    placeholder="First Name *"
-                    onChange={e => setFirstName(e.target.value)}
-                    value={firstName}
-                    required
-                /></div>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    placeholder="Last Name *"
-                    onChange={e => setLastName(e.target.value)}
-                    value={lastName}
-                    required
-                /></div>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    placeholder="Password *"
-                    onChange={e => setPassword(e.target.value)}
-                    value={password}
-                    type="password"
-                    required
-                /></div>
-                <div style={styles.inputContainer}><Textarea
-                    style={styles.input}
-                    placeholder="Profile Description"
-                    onChange={e => setProfileDescription(e.target.value)}
-                    value={profileDescription}
-                /></div>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    placeholder="School"
-                    onChange={e => setSchool(e.target.value)}
-                    value={school}
-                /></div>
-                <div style={styles.inputContainer}><CustomTextField
-                    style={styles.input}
-                    variant='standard'
-                    placeholder="University"
-                    onChange={e => setUniversity(e.target.value)}
-                    value={university}
-                /></div>
-                <div style={styles.inputContainer}><Textarea
-                    style={styles.input}
-                    placeholder="Work Experience"
-                    onChange={e => setWorkExperience(e.target.value)}
-                    value={workExperience}
-                /></div>
-                <>
-                    <Button style={styles.button} variant="contained" onClick={handleProfilePicClick} >
-                        Upload a profile pic
-                    </Button>
-                    <input
-                        style={{ display: "none" }}
-                        type="file"
-                        onChange={e => handleFileChange(e, setProfilePic)}
-                        ref={hiddenProfilePicInput}
-                    />
-                    {profilePic && <p>Uploaded file: {profilePic.name}</p>}
-                </>
-                <>
-                    <Button style={styles.button} variant="contained" onClick={handleCoverPhotoClick} >
-                        Upload a cover photo
-                    </Button>
-                    <input
-                        style={{ display: "none" }}
-                        type="file"
-                        onChange={e => handleFileChange(e, setCoverPhoto)}
-                        ref={hiddenCoverPhotoInput}
-                    />
-                    {coverPhoto && <p>Uploaded file: {coverPhoto.name}</p>}
-                </>
-                <Button style={styles.button} variant="contained" onClick={handleRegister}>Register</Button>
-                {error && <div style={styles.errorMessage}>{error}</div>}
-                <div style={styles.registerContainer}>
-                    Already have an account? <Link to="/" style={styles.link}>Login here</Link>
+        <div style={styles.body}>
+            <div style={styles.leftContainer}>
+                <div style={styles.formContainer}>
+                    <h1 style={styles.title}>Register here</h1>
+                    <>
+                        <Button style={styles.button} variant="contained" onClick={handleCvClick} >
+                            Upload your cv and autofill the fields
+                        </Button>
+                        <input
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={e => handleCVChange(e, setCv)}
+                            ref={hiddenCvInput}
+                        />
+                        {cv && <p>Uploaded file: {cv.name}</p>}
+                    </>
+                    {loading && (
+                        <div >
+                            <CircularProgress style={{color: 'black'}}/>
+                        </div>
+                    )}
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="Username "
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                        required
+                    /></div>
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="Email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        type="email"
+                        required
+                    /></div>
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="First Name"
+                        onChange={e => setFirstName(e.target.value)}
+                        value={firstName}
+                        required
+                    /></div>
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="Last Name"
+                        onChange={e => setLastName(e.target.value)}
+                        value={lastName}
+                        required
+                    /></div>
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="Password"
+                        onChange={e => setPassword(e.target.value)}
+                        value={password}
+                        type="password"
+                        required
+                    /></div>
+                    <div style={styles.inputContainer}><Textarea
+                        style={styles.input}
+                        placeholder="Profile Description"
+                        onChange={e => setProfileDescription(e.target.value)}
+                        value={profileDescription}
+                    /></div>
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="School"
+                        onChange={e => setSchool(e.target.value)}
+                        value={school}
+                    /></div>
+                    <div style={styles.inputContainer}><CustomTextField
+                        style={styles.input}
+                        variant='standard'
+                        label="University"
+                        onChange={e => setUniversity(e.target.value)}
+                        value={university}
+                    /></div>
+                    <div style={styles.inputContainer}><Textarea
+                        style={styles.input}
+                        label="Work Experience"
+                        onChange={e => setWorkExperience(e.target.value)}
+                        value={workExperience}
+                    /></div>
+                    <>
+                        <Button style={styles.button} variant="contained" onClick={handleProfilePicClick} >
+                            Upload a profile pic
+                        </Button>
+                        <input
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={e => handleFileChange(e, setProfilePic)}
+                            ref={hiddenProfilePicInput}
+                        />
+                        {profilePic && <p>Uploaded file: {profilePic.name}</p>}
+                    </>
+                    <>
+                        <Button style={styles.button} variant="contained" onClick={handleCoverPhotoClick} >
+                            Upload a cover photo
+                        </Button>
+                        <input
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={e => handleFileChange(e, setCoverPhoto)}
+                            ref={hiddenCoverPhotoInput}
+                        />
+                        {coverPhoto && <p>Uploaded file: {coverPhoto.name}</p>}
+                    </>
+                    <Button style={styles.button} variant="contained" onClick={handleRegister}>Register</Button>
+                    {error && <div style={styles.errorMessage}>{error}</div>}
+                    <div style={styles.registerContainer}>
+                        Already have an account? <Link to="/" style={styles.link}>Login here</Link>
+                    </div>
                 </div>
             </div>
             <div style={styles.imageContainer}>
