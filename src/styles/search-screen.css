@@ -7,7 +7,8 @@ body {
     box-sizing: border-box;
     min-height: 100vh;
     font-family: "Poppins", sans-serif;
-    padding-top: 60px;
+    padding-top: 100px; 
+    background-color: #f4f4f4; 
 }
 
 .search__nav {
@@ -15,10 +16,9 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
-    z-index: 1000;
+    background: #ffffff; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); 
+    padding: 15px 30px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,67 +30,77 @@ body {
     text-decoration: none;
     font-size: 16px;
     padding: 10px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    border-radius: 5px; 
+    transition: background-color 0.3s, color 0.3s; 
 }
 
 .search__nav .nav-link:hover {
     background-color: #e0e0e0;
+    color: #000; 
 }
 
-.search__nav .left__container {
-    float: left;
-}
-
+.search__nav .left__container,
 .search__nav .right__container {
-    float: right;
+    display: flex;
+    align-items: center;
 }
 
 .search__nav input[type="text"] {
-    flex: 1;
+    flex-grow: 1;
     padding: 10px;
     border: 2px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px; 
     font-size: 16px;
     color: #333;
     margin: 0 10px;
     box-sizing: border-box;
+    background-color: #fff;
 }
 
 .search__nav button {
     padding: 10px 20px;
-    background-color: black;
+    background-color: #0056b3; 
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
     box-sizing: border-box;
+    transition: background-color 0.3s; 
 }
 
 .search__nav button:hover {
-    background-color: rgb(25, 24, 24);
+    background-color: #003d82; 
 }
 
-a {
-    text-decoration: none;
+.searchContainer {
+    margin-top: 70px; 
+    overflow: auto;
+    padding-bottom: 20px;
 }
 
 .container {
+    display: flex;
     align-items: center;
     margin-bottom: 20px;
-    background: #fff;
+    background: #ffffff;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s; 
     cursor: pointer;
 }
 
+.container:hover {
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+}
+
 .container img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    margin-right: 15px;
+    margin-right: 20px; 
     object-fit: cover;
 }
 
@@ -101,8 +111,7 @@ a {
 
 .container .text .name {
     font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-weight: 600; 
 }
 
 .container .text .location {
