@@ -16,6 +16,12 @@ from usersApp.models import RecruiteeUser
 
 
 class GenerateCV(APIView):
+    """
+        API view to generate a CV in PDF format for a logged-in user.
+
+        The view authenticates the user, checks if the user has the required permissions,
+        retrieves the user's skills from the database, and generates a PDF file using these details.
+        """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -44,6 +50,12 @@ class GenerateCV(APIView):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def add_user_skill(request):
+    """
+        API endpoint to add a new skill to the currently authenticated user's profile.
+
+        This function checks for the existence of the RecruiteeUser and the specified skill,
+        and if valid, creates a new UserSkills association.
+    """
     try:
         recruitee_user = RecruiteeUser.objects.get(user_ptr_id=request.user.id)
     except RecruiteeUser.DoesNotExist:
@@ -67,6 +79,11 @@ def add_user_skill(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_user_skill(request):
+    """
+        API endpoint to delete a skill from the authenticated user's profile.
+
+        Requires both the recruitee_user and skill IDs to identify and delete the association.
+    """
     recruitee_user_id = request.data.get('recruitee_user')
     skill_id = request.data.get('skill')
 
@@ -85,6 +102,11 @@ def delete_user_skill(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_user_skills(request):
+    """
+       Retrieves all skills associated with the authenticated user.
+
+       This endpoint provides a list of skills linked through the UserSkills model.
+    """
     user_skills = UserSkills.objects.filter(recruitee_user=request.user).select_related('skill')
     serializer = UserSkillsSerializer(user_skills, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -92,6 +114,11 @@ def get_user_skills(request):
 
 @api_view(['GET'])
 def get_user_skills_unauthenticated(request):
+    """
+    Retrieves all skills associated with a specified recruitee user without requiring authentication.
+
+    This is useful for public profiles where authentication is not required to view basic user data.
+    """
     recruitee_id = request.query_params.get('recruitee')
     user_skills = UserSkills.objects.filter(recruitee_user=recruitee_id).select_related('skill')
     serializer = UserSkillsSerializer(user_skills, many=True)

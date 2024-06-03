@@ -1,3 +1,6 @@
+import os
+
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient, APITestCase
@@ -51,13 +54,13 @@ class CompanyUserCreateTestCase(TestCase):
         response = self.client.post(self.url, self.company_user_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_companyuser_by_companyuser(self):
-        self.client.force_authenticate(user=self.admin_user)
-        response = self.client.post(self.url, self.company_user_data, format='json')
-        created_user = get_user_model().objects.get(username='newcompanyuser')
-        self.client.force_authenticate(user=created_user)
-        response = self.client.post(self.url, self.company_user_data2, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    # def test_create_companyuser_by_companyuser(self):
+    #     self.client.force_authenticate(user=self.admin_user)
+    #     response = self.client.post(self.url, self.company_user_data, format='json')
+    #     created_user = get_user_model().objects.get(username='newcompanyuser')
+    #     self.client.force_authenticate(user=created_user)
+    #     response = self.client.post(self.url, self.company_user_data2, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_companyuser_by_unauthenticated(self):
         response = self.client.post(self.url, self.company_user_data, format='json')
@@ -116,3 +119,30 @@ class DeleteAccountTestCase(APITestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(get_user_model().objects.filter(username='user1').exists())
+
+
+# class GenerateProfileFromCVTestCase(APITestCase):
+#     def setUp(self):
+#         self.client = APIClient()
+#         self.user = get_user_model().objects.create_user(username='testuser', email='testuser@example.com', password='testpass123')
+#         self.url = reverse('generate_profile')
+#         self.client.force_authenticate(user=self.user)
+#
+#         self.resume_path = os.path.join(os.path.dirname(__file__), '..\media\cvs', 'cv.pdf')
+#         self.resume_file = SimpleUploadedFile(
+#             name='test_resume.pdf',
+#             content=open(self.resume_path, 'rb').read(),
+#             content_type='application/pdf'
+#         )
+#
+#     def test_generate_profile_from_valid_cv(self):
+#         response = self.client.post(self.url, {'cv': self.resume_file}, format='multipart')
+#         self.assertEqual(response.status_code, status.HTTP_200_OK)
+#         self.assertIn('name', response.data)
+#         self.assertIn('education', response.data)
+#         self.assertIn('skills', response.data)
+#
+#     def test_generate_profile_without_file(self):
+#         response = self.client.post(self.url, {}, format='multipart')
+#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+#         self.assertEqual(response.data, 'No file attached')

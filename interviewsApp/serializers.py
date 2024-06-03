@@ -39,11 +39,9 @@ class InterviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'job', 'company_user', 'recruitee_user', 'time', 'interview_type', 'quiz_questions']
 
     def create(self, validated_data):
-        # Custom handling of fields, especially for ForeignKey or other complex field types
         job = validated_data.pop('job')
         company_user = validated_data.pop('company_user')
         recruitee_user = validated_data.pop('recruitee_user')
 
-        # Assuming job, company_user, and recruitee_user are passed as instances or valid IDs
         interview = Interview.objects.create(job=job, company_user=company_user, recruitee_user=recruitee_user, **validated_data)
         return interview
