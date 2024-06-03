@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import '../styles/MakeQuizScreen.css';  
+import '../styles/make-quiz.css';  
 
 const MakeQuizScreen = () => {
     const { quiz, addQuestion, addQuizQuestion, addAnswer } = useContext(AuthContext);

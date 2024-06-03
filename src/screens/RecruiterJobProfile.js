@@ -16,6 +16,7 @@ const RecruiterJobProfile = () => {
             getApplicants(job.id);
             getJobSkills(job.id);
         }
+        console.log(applicants);
     }, []);
 
     const handleSearchJobsBySkills = async () => {
@@ -76,13 +77,19 @@ const RecruiterJobProfile = () => {
                             {jobSkills.map((skill, index) => (
                                 <div key={index}>{skill.skill_name}</div>
                             ))}
-                            {applicants && <p><strong>Applicants:</strong></p>}
-                            {applicants.map((applicant, index) => (
-                                <div key={index} style={{cursor: 'pointer'}} onClick={() => navigate('/applicantscreen', { state: { applicant: applicant, job: job } })}>{applicant.username}</div>
-                            ))}
-                            <button onClick={() => navigate(`/companyprofile`, { state: { company: profile.company } })} >Back</button>
                         </div>
                     )}
+                    {applicants.length > 0 && (
+                        <div>
+                            <p><strong>Applicants:</strong></p>
+                            {applicants.map((applicant, index) => (
+                                <div key={index} style={{ cursor: 'pointer' }} onClick={() => navigate('/applicantscreen', { state: { applicant: applicant, job: job } })}>
+                                    {applicant.username}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <button onClick={() => navigate(`/companyprofile`, { state: { company: profile.company } })}>Back</button>
                 </div>
             </div>
         </div>

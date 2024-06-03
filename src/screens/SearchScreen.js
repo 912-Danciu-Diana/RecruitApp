@@ -33,6 +33,10 @@ const SearchScreen = () => {
         navigate('/');
     };
 
+    if(!profile) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className='body'>
             <div className='search__nav'>

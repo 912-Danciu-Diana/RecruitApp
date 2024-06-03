@@ -17,9 +17,11 @@ const ApplicantScreen = () => {
 
     useEffect(() => {
         async function fetchData() {
-            getApplicantSkills(applicant.id);
-            await getApplication(job.id, applicant.id);
-            await interviewExists(job.id, applicant.id);
+            if (applicant) {
+                getApplicantSkills(applicant.id);
+                await getApplication(job.id, applicant.id);
+                await interviewExists(job.id, applicant.id);
+            }
         }
         fetchData();
     }, [applicant, job]);
