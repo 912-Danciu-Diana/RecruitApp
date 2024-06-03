@@ -240,39 +240,30 @@ header {
   object-fit: cover;
 }
 
-@media (min-width: 868px) {
-  .body .cols__container {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 90%;
-    justify-content: space-between;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 50px;
+@media (max-width: 768px) {
+  .search__nav {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
   }
-  .body .cols__container .left__col {
-    padding: 25px 0px;
+
+  .search__nav input[type="text"] {
+    width: 90%; /* Adjusted width for search input */
+    margin: 5px auto; /* Centered with vertical margin */
   }
-  .body .cols__container .right__col nav ul {
-    flex-direction: row;
-    gap: 30px;
-  }
-  .body .cols__container .right__col .photos {
-    height: 365px;
-    overflow: auto;
-    padding: 0 0 30px;
+
+  .search__nav button {
+    width: 30px; /* Adjust width for search button */
+    margin: 5px auto; /* Centered with vertical margin */
+    padding: 8px; /* Consistent padding for better tap targets */
   }
 }
 
-@media (min-width: 1017px) {
-  .body .cols__container .left__col {
-    margin: 0;
-    margin-right: auto;
+@media (max-width: 480px) {
+  .search__nav .left__container, .search__nav .right__container {
+    width: 100%; /* Full width to manage space */
   }
-  .body .cols__container .right__col nav {
-    flex-direction: row;
-  }
-  .body .cols__container .right__col nav button {
-    margin-top: 0;
+
+  .search__nav .logout {
+    width: 100%; /* Full width for logout button */
+    margin-top: 5px;
   }
 }
