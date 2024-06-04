@@ -41,12 +41,14 @@ const ApplicantScreen = () => {
             }
         }
         fetchQuizStatus();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quiz, quizTaken, checkQuizTaken]);
 
     useEffect(() => {
         if (quiz && quizTaken) {
             calculateQuizScore(quiz.id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quiz, quizTaken]);
 
     const handleAcceptForQuiz = async () => {
