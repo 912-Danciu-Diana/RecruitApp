@@ -24,12 +24,10 @@ const ApplicantScreen = () => {
             }
         }
         fetchData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [applicant, job]);
 
     useEffect(() => {
         console.log("application:", application);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [application]);
 
     useEffect(() => {
@@ -41,14 +39,12 @@ const ApplicantScreen = () => {
             }
         }
         fetchQuizStatus();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quiz, quizTaken, checkQuizTaken]);
 
     useEffect(() => {
         if (quiz && quizTaken) {
             calculateQuizScore(quiz.id);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quiz, quizTaken]);
 
     const handleAcceptForQuiz = async () => {
