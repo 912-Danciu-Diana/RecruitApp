@@ -24,10 +24,12 @@ const ApplicantScreen = () => {
             }
         }
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [applicant, job]);
 
     useEffect(() => {
         console.log("application:", application);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [application]);
 
     useEffect(() => {
