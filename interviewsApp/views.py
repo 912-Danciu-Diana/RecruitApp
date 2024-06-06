@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from jobsApp.models import Job
 from usersApp.models import RecruiteeUser, CompanyUser
-from .generate_ai_quiz import generate_quiz, parse_quiz
+from .generate_ai_quiz import generate_quiz, parse_quiz, chat_with_ai
 from .models import Interview, Question, Answer, QuizQuestion, UsersAnswer
 from .serializers import (
     InterviewSerializer, QuestionSerializer,
@@ -255,3 +255,24 @@ def quiz_details(request, interview_id):
         'id': interview.id,
         'quiz_questions': quiz_questions_data
     })
+
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def chatbot(request):
+    recruitee_user = request.user
+    try:
+        RecruiteeUser.objects.get(id=recruitee_user.pk)
+    except RecruiteeUser.DoesNotExist:
+        return Response({"detail": "Unauthorized. Only recruitees can perform this action."},
+                        status=status.HTTP_403_FORBIDDEN)
+
+    prompt = request.data.get('prompt')
+
+    if not prompt:
+        return Response({"detail": "Prompt is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    reply = chat_with_ai(prompt)
+
+    return Response({"reply": reply}, status=status.HTTP_200_OK)

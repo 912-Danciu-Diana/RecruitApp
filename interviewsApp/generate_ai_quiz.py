@@ -19,7 +19,6 @@ def generate_quiz(topic):
         messages=messages,
         max_tokens=1500
     )
-    print(response)
 
     return response.choices[0].message['content'].strip()
 
@@ -46,3 +45,13 @@ def parse_quiz(quiz_text):
         questions.append(current_question)
 
     return questions
+
+
+def chat_with_ai(prompt):
+    response = openai.ChatCompletion.create(
+        model="gpt-4o",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=1500
+    )
+
+    return response.choices[0].message['content'].strip()
