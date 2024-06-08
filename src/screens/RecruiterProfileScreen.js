@@ -16,6 +16,7 @@ const RecruiterProfileScreen = () => {
             }
         }
         getJobs();
+        console.log(profile);
     });
 
     const handleLogout = async () => {
@@ -79,22 +80,22 @@ const RecruiterProfileScreen = () => {
                     <IoIosLogOut onClick={handleLogout} className="logout" />
                 </div>
             </div>
-            <header style={{ background: `url(${profile.company.cover_photo}) no-repeat 50% 20% / cover` }}></header>
+            <header style={{ background: `url(http://127.0.0.1:8080${profile.cover_photo_url}) no-repeat 50% 20% / cover` }}></header>
 
             <div className="cols__container">
                 <div className="left__col">
                     <div class="img__container">
                         <img
-                            src={profile.company.profile_pic}
-                            alt={`${profile.company.name}'s profile`}
+                            src={`http://127.0.0.1:8080${profile.profile_pic_url}`}
+                            alt={`${profile.name}'s profile`}
 
                         />
                         <span></span>
                     </div>
                     <h2>
-                        {profile.company.name}
+                        {profile.first_name} {profile.last_name}
                     </h2>
-                    <p><strong>{profile.first_name} {profile.last_name}</strong></p>
+                    <p><strong>{profile.company.name}</strong></p>
                     {profile.company.location && <p><strong>Location:</strong> {profile.company.location.city}, {profile.company.location.country}</p>}
                 </div>
 

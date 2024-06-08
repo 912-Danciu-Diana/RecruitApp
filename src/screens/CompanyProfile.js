@@ -107,6 +107,10 @@ const CompanyProfile = () => {
         },
     };
 
+    if (!profile) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className='body'>
             <div class="search__nav">

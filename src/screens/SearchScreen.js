@@ -5,7 +5,7 @@ import '../styles/search-screen.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { IoIosLogOut } from "react-icons/io";
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.png';
 
 const SearchScreen = () => {
     const [companySearchTerm, setCompanySearchTerm] = useState('');

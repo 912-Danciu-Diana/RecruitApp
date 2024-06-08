@@ -214,7 +214,6 @@ const ApplicantScreen = () => {
                     <button onClick={submitAiQuiz} disabled={loading}>
                         {loading ? 'Generating...' : 'Generate Quiz'}
                     </button>
-                    <button onClick={() => setIsModalOpen(false)}>Close</button>
                 </Modal>
             </div>
         ))

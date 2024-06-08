@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import SkillSearchComponent from './SkillSearchComponent';
@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { IoIosLogOut } from "react-icons/io";
 import logo from '../assets/logo.png'
+import Chatbot from './Chatbot';
 
 
 const UserProfileScreen = () => {
@@ -147,7 +148,7 @@ const UserProfileScreen = () => {
                         <button onClick={handleAddSkillClick} >Add skill</button>
                     </div>
                 </div>
-
+                <Chatbot/>
             </div>
         ))
     );

@@ -516,3 +516,23 @@ export const getSkillsForJob = async (jobId) => {
         console.error('There was a problem with the fetch operation:', error);
     }
 }
+
+export const chat_with_ai = async(token, prompt) => {
+    try {
+        const response = await fetch(`${baseURL}/interviewsApp/api/chatbot/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify({prompt: prompt}),
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch(error) {
+        console.error("Chatbot failed:", error);
+        throw error;
+    }
+}
