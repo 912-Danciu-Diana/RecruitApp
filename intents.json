@@ -1,0 +1,161 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hello",
+        "Hi",
+        "Good morning",
+        "Good afternoon",
+        "Good evening",
+        "Hey there",
+        "How's it going",
+        "What's up"
+      ],
+      "responses": [
+        "Hello! How can I assist you with your job search today?",
+        "Hi there! What can I do for you today?",
+        "Good day! How may I help you find the right job?",
+        "Hey! Looking for a new job or need help with an existing application?"
+      ]
+    },
+    {
+      "tag": "job_search",
+      "patterns": [
+        "I'm looking for a job",
+        "Are there any openings in tech",
+        "Show me the latest marketing jobs",
+        "What jobs are available",
+        "Find jobs near me",
+        "I need a job in finance",
+        "Who is hiring now?"
+      ],
+      "responses": [
+        "You can look up jobs abd companies based on their names, location, or if they are remote or not. If you want to check out jobs that match your skills and knowledge click on the logo and you will be redirected to the main search page. Anything else I can help you with?"
+      ]
+    },
+    {
+      "tag": "application_help",
+      "patterns": [
+        "How do I apply",
+        "What do I need to apply",
+        "Can you help me with my application",
+        "Application process",
+        "Steps to apply for a job"
+      ],
+      "responses": [
+        "I can definitely help with that. You'll need to fill out your profile and attach a resume if you haven't already. This way, the recruiters can find out relevant details about you. Then you can look up the desired jobs you want based on location or name. You can go to the profile of your favorite jobs and apply to them. Is there anything else I can help you with?"
+      ]
+    },
+    {
+      "tag": "attach_resume",
+      "patterns": [
+        "How can I attach my resume",
+        "How can I view my resume",
+        "Help can I upload my resume",
+        "Where can I check my resume",
+        "Where can I see my resume"
+      ],
+      "responses": [
+        "You can manage your profile details on your profile page. There should be an Upload Resume button if you haven't uploaded it already. If you have already attached your resume there should be a View CV button which will redirect you to your CV pdf. Anything else you are unsure about and I can help you with?"
+      ]
+    },
+    {
+      "tag": "resume_tips",
+      "patterns": [
+        "Any tips for my resume",
+        "How should I write my resume",
+        "Help me with my resume",
+        "Resume guidance",
+        "Improve my resume"
+      ],
+      "responses": [
+        "Make sure your resume is clear and concise. Focus on your achievements and skills relevant to the job you're applying for.",
+        "For a great resume, tailor it to the job, use active language, and include measurable achievements. Need help with anything else?",
+        "Updating your resume can significantly increase your chances. Start by highlighting your most relevant experience at the top."
+      ]
+    },
+    {
+      "tag": "take_quiz",
+      "patterns": [
+        "How can I take my quiz",
+        "Where is my quiz",
+        "Can I view the score of the quiz that I have taken",
+        "See quiz results"
+      ],
+      "responses": [
+        "If you have been accepted for the quiz, your quiz should be available on the job profile page. After taking it, your score should be visible on your job profile page. Next step would be for the recruiter to view your results. Wish you good luck with the quiz!",
+        "If you have been accepted for the quiz, your quiz should be available on the job profile page. After taking it, your score should be visible on your job profile page. Next step would be for the recruiter to view your results. Do you want to know any tips for taking the quiz?"
+      ]
+    },
+    {
+      "tag": "interview_preparation",
+      "patterns": [
+        "How do I prepare for an interview",
+        "Any interview tips",
+        "What are common interview questions",
+        "Interview advice",
+        "Help with interview"
+      ],
+      "responses": [
+        "Practice common interview questions and be prepared to discuss your previous job experiences and how they relate to the job you're applying for.",
+        "It's good to be prepared with examples of your work that relate to the job. Also, be ready to answer why you're interested in the position. Would you like more detailed advice?",
+        "Interviews can be daunting, but being well-prepared makes all the difference. Would you like to go through some mock questions or learn how to dress for the interview?"
+      ]
+    },
+    {
+      "tag": "quiz_preparation",
+      "patterns": [
+        "How do I prepare for a quiz",
+        "Any quiz tips",
+        "What are common quiz questions",
+        "Quiz advice",
+        "Help with quiz",
+        "Yes"
+      ],
+      "responses": [
+        "Preparing for a quiz involves understanding the job requirements and reviewing related topics.",
+        "A good tip for quiz prep is to review common industry questions and brush up on any required skills or knowledge.",
+        "Common quiz questions often involve scenarios you might face on the job. There are a lot of sample quizzes on the internet based on your job choice. I advice to practice before by doing a couple of such quizzes."
+      ]
+    },
+    {
+      "tag": "video_interview_setup",
+      "patterns": [
+        "How do I set up for a video interview",
+        "Video interview tips",
+        "Help with video interview setup"
+      ],
+      "responses": [
+        "Ensure you have a quiet, well-lit room. Test your microphone and camera beforehand, and maintain a good eye contact with the camera. Need a checklist or a test run?",
+        "Setting up for a video interview is crucial. Make sure your internet connection is stable, and use headphones to avoid echo. Want to try a quick connectivity test with me?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Thank you"
+      ],
+      "responses": [
+        "Happy to help!",
+        "Of course! Feel free to ask more questions anytime!"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye",
+        "Goodbye",
+        "See you later",
+        "Catch you later",
+        "Talk to you soon"
+      ],
+      "responses": [
+        "Goodbye! Good luck with your job search!",
+        "See you later! Feel free to ask more questions anytime!",
+        "Goodbye! Don't hesitate to return if you need more help!",
+        "Catch you later! I'm here if you need further assistance."
+      ]
+    }
+  ]
+}
