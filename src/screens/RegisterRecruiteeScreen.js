@@ -305,7 +305,7 @@ const RegisterRecruiteeScreen = () => {
                     /></div>
                     <div style={styles.inputContainer}><Textarea
                         style={styles.input}
-                        label="Work Experience"
+                        placeholder="Work Experience"
                         onChange={e => setWorkExperience(e.target.value)}
                         value={workExperience}
                     /></div>

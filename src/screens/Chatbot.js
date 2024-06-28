@@ -24,7 +24,8 @@ const Chatbot = () => {
             setChatHistory(newHistory);
             try {
                 const response = await chatbot(userInput);
-                setChatHistory([...newHistory, { type: 'bot', text: response.reply }]);
+                console.log(response.response);
+                setChatHistory([...newHistory, { type: 'bot', text: response.response }]);
             } catch (error) {
                 console.error("Chatbot interaction failed:", error);
             }
@@ -36,7 +37,7 @@ const Chatbot = () => {
         <div className={`chatbot-container ${isCollapsed ? 'chatbot-collapsed' : ''}`}>
             <div className="chatbot-header" onClick={toggleCollapse}>
                 Chatbot
-                {isCollapsed ? <span>▼</span> : <span>▲</span>}
+                {isCollapsed ? <span>▲</span> : <span>▼</span>}
             </div>
             {!isCollapsed && (
                 <div className="chatbot-body">

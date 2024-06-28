@@ -44,6 +44,7 @@ const TakeQuiz = () => {
 
     return (
         <div className="takeQuizContainer">
+            <h1 className="takeQuizTitle">Quiz</h1>
             {showSuccessMessage === false && quiz && quiz.quiz_questions && quiz.quiz_questions.length > 0 ? (
                 quiz.quiz_questions.map((quizQuestion, index) => (
                     <div key={quizQuestion.id} className="questionItem">

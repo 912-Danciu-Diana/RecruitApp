@@ -6,6 +6,13 @@
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.takeQuizTitle {
+    text-align: center;
 }
 
 .questionHeader {
@@ -18,6 +25,9 @@
 .questionList {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .questionItem {
@@ -29,10 +39,14 @@
     padding: 8px;
     background-color: #fff;
     border-radius: 5px;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     margin-bottom: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.answerLabel * {
+    cursor: pointer;
 }
 
 .answerLabel:hover {
@@ -52,7 +66,8 @@
     cursor: pointer;
     font-size: 16px;
     box-sizing: border-box;
-    margin-bottom: 10px;
+    margin: 0 auto 10px;
+    width: fit-content;
 }
 
 .submitButton:hover {

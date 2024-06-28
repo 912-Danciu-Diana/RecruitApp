@@ -24,11 +24,7 @@ const ApplicantScreen = () => {
             }
         }
         fetchData();
-    }, [applicant, job]);
-
-    useEffect(() => {
-        console.log("application:", application);
-    }, [application]);
+    }, [applicant, job, application]);
 
     useEffect(() => {
         async function fetchQuizStatus() {
@@ -49,22 +45,22 @@ const ApplicantScreen = () => {
 
     const handleAcceptForQuiz = async () => {
         await acceptOrRejectForQuiz(job.id, applicant.id, true);
-        window.location.reload();
+        //window.location.reload();
     }
 
     const handleRejectForQuiz = async () => {
         await acceptOrRejectForQuiz(job.id, applicant.id, false);
-        window.location.reload();
+        //window.location.reload();
     }
 
     const handleAcceptCandidate = async () => {
         await acceptOrRejectCandidate(job.id, applicant.id, true);
-        window.location.reload();
+        //window.location.reload();
     }
 
     const handleRejectCandidate = async () => {
         await acceptOrRejectCandidate(job.id, applicant.id, false);
-        window.location.reload();
+        //window.location.reload();
     }
 
     const handleMakeQuiz = async () => {
@@ -81,17 +77,13 @@ const ApplicantScreen = () => {
         await generateAiQuiz(job.id, applicant.id, topic);
         setLoading(false);
         setIsModalOpen(false);
-        window.location.reload();
+        //window.location.reload();
     }
 
     const handleLogout = async () => {
         await logout();
         navigate('/');
     };
-
-    if (!profile) {
-        return <div>Loading...</div>;
-    }
 
 
     const renderApplicationStatus = () => {
@@ -101,15 +93,15 @@ const ApplicantScreen = () => {
 
         const currentApplication = application[0];
 
-        if (currentApplication.acceptedForQuiz === false || currentApplication.accepted === false) {
-            return <p><strong>Application status:</strong> Candidate rejected</p>;
-        }
-
-        if (currentApplication.accepted) {
+        if (currentApplication?.accepted) {
             return <p><strong>Application status:</strong> Accepted for job.</p>;
         }
 
-        if (currentApplication.acceptedForQuiz === true && quizExists) {
+        if (currentApplication?.acceptedForQuiz === false || currentApplication?.accepted === false) {
+            return <p><strong>Application status:</strong> Candidate rejected</p>;
+        }
+
+        if (currentApplication?.acceptedForQuiz === true && quizExists) {
             if (quizTaken) {
                 return <div>
                     <p><strong>Quiz status:</strong> Completed. Score: {quizScore}%</p>
@@ -122,7 +114,7 @@ const ApplicantScreen = () => {
             }
         }
 
-        if (currentApplication.acceptedForQuiz === true && !quizExists) {
+        if (currentApplication?.acceptedForQuiz === true && !quizExists) {
             return <div>
                 <button onClick={handleMakeQuiz}>Make a quiz</button>
                 <button onClick={handleGenerateAiQuiz}>Ai generated quiz</button>
@@ -136,6 +128,10 @@ const ApplicantScreen = () => {
             </div>
         );
     };
+
+    if (!profile || !applicant || !application) {
+        return <div>Loading...</div>;
+    }
 
     return (
         (applicant && (

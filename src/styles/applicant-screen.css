@@ -95,6 +95,11 @@ header {
   margin: 0 auto;
 }
 
+.body .cols__container .left__col * {
+  max-width: 100%; 
+  box-sizing: border-box; 
+}
+
 .body .cols__container .left__col .img__container {
   position: absolute;
   top: -60px;

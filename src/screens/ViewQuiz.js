@@ -13,7 +13,7 @@ const ViewQuiz = () => {
 
     return (
         <div className="viewQuizContainer">
-            <h2 className="header">Quiz Questions</h2>
+            <h1 className="header">Quiz Questions</h1>
             {quiz && quiz.quiz_questions && quiz.quiz_questions.length > 0 ? (
                 quiz.quiz_questions.map((quizQuestion, index) => (
                     <div key={quizQuestion.id} className="quizQuestion">

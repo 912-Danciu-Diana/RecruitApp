@@ -370,10 +370,9 @@ const AuthContextProvider = ({ children }) => {
     }
   }
 
-  const chatbot = async (prompt) => {
+  const chatbot = async (message) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await chat_with_ai(token, prompt);
+      const response = await chat_with_ai(message);
       console.log("Chatbot successful", response);
       return response;
     } catch (error) {

@@ -517,15 +517,14 @@ export const getSkillsForJob = async (jobId) => {
     }
 }
 
-export const chat_with_ai = async(token, prompt) => {
+export const chat_with_ai = async(message) => {
     try {
-        const response = await fetch(`${baseURL}/interviewsApp/api/chatbot/`, {
+        const response = await fetch(`http://localhost:5000/chat`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({prompt: prompt}),
+            body: JSON.stringify({message: message}),
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

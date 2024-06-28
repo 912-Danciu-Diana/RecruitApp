@@ -214,6 +214,7 @@ header {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 20px;
+  margin-right: 20px;
 }
 .body .cols__container .right__col nav button:hover {
   opacity: 0.8;

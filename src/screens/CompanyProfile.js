@@ -20,6 +20,7 @@ const CompanyProfile = () => {
             await searchForJobs(company.name);
         }
         getJobs();
+        console.log(company);
     });
 
     const handleJobNavigation = (job) => {
@@ -142,13 +143,13 @@ const CompanyProfile = () => {
                 </div>
             </div>
 
-            <header style={{ background: `url(${company.cover_photo}) no-repeat 50% 20% / cover` }}></header>
+            <header style={{ background: `url(${company.cover_photo.startsWith('http://') ? '' : 'http://127.0.0.1:8080'}${company.cover_photo}) no-repeat 50% 20% / cover` }}></header>
 
             <div class="cols__container">
                 <div class="left__col">
                     <div class="img__container">
                         <img
-                            src={company.profile_pic}
+                            src={`${company.profile_pic.startsWith('http://') ? '' : 'http://127.0.0.1:8080'}${company.profile_pic}`}
                             alt={`${company.name}'s profile`}
 
                         />

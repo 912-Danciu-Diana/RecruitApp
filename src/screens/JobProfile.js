@@ -30,7 +30,7 @@ const JobProfile = () => {
             }
         }
         fetchData();
-    }, [job?.id, profile?.id]);
+    }, [job?.id, profile?.id, application]);
 
     useEffect(() => {
         async function fetchQuizStatus() {

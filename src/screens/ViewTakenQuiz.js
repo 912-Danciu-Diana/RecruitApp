@@ -19,19 +19,38 @@ const ViewTakenQuiz = () => {
         return <div>Loading quiz details...</div>;
     }
 
+    const filterDistinctAnswers = (userAnswers) => {
+        const distinctAnswers = [];
+        const answerSet = new Set();
+        
+        userAnswers.forEach((answer) => {
+            if (!answerSet.has(answer.answer)) {
+                answerSet.add(answer.answer);
+                distinctAnswers.push(answer);
+            }
+        });
+        
+        return distinctAnswers;
+    };
+
     return (
         <div className="container">
             <h2 className="header">Quiz Questions</h2>
             {quizDetails.quiz_questions.map((quizQuestion, index) => (
                 <div key={index} className="question">
                     <p>Question {index + 1}: {quizQuestion.question}</p>
-                    {quizQuestion.user_answers.map((userAnswer, answerIndex) => (
+                    {filterDistinctAnswers(quizQuestion.user_answers).map((userAnswer, answerIndex) => (
                         <span key={answerIndex} className="answer">
                             {userAnswer.answer}
                             {userAnswer.user_marked_correct ? (
-                                <span className="correct"> ✓ [Correct Answer]</span>
+                                <span className="correct"> ✓ </span>
                             ) : (
-                                <span className="incorrect"> ✗ [Wrong Answer]</span>
+                                <span className="incorrect"> ✗ </span>
+                            )}
+                            {userAnswer.actual_is_correct ? (
+                                <span className="correct"> [Correct Answer]</span>
+                            ) : (
+                                <span className="incorrect"> [Wrong Answer]</span>
                             )}
                         </span>
                     ))}
