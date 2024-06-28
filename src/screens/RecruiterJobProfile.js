@@ -89,7 +89,7 @@ const RecruiterJobProfile = () => {
                             ))}
                         </div>
                     )}
-                    <button onClick={() => navigate(`/companyprofile`, { state: { company: profile.company } })}>Back</button>
+                    <button onClick={() => navigate(`/recruiterprofile`)}>Back</button>
                 </div>
             </div>
         </div>
