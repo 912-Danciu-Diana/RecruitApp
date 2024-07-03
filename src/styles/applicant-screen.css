@@ -100,13 +100,13 @@ header {
   box-sizing: border-box; 
 }
 
-.body .cols__container .left__col .img__container {
+.body .cols__container .left__col .img_container {
   position: absolute;
   top: -60px;
   left: 50%;
   transform: translatex(-50%);
 }
-.body .cols__container .left__col .img__container img {
+.body .cols__container .left__col .img_container img {
   width: 120px;
   height: 120px;
   object-fit: cover;

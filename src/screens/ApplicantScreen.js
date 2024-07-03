@@ -45,22 +45,18 @@ const ApplicantScreen = () => {
 
     const handleAcceptForQuiz = async () => {
         await acceptOrRejectForQuiz(job.id, applicant.id, true);
-        //window.location.reload();
     }
 
     const handleRejectForQuiz = async () => {
         await acceptOrRejectForQuiz(job.id, applicant.id, false);
-        //window.location.reload();
     }
 
     const handleAcceptCandidate = async () => {
         await acceptOrRejectCandidate(job.id, applicant.id, true);
-        //window.location.reload();
     }
 
     const handleRejectCandidate = async () => {
         await acceptOrRejectCandidate(job.id, applicant.id, false);
-        //window.location.reload();
     }
 
     const handleMakeQuiz = async () => {
@@ -77,7 +73,6 @@ const ApplicantScreen = () => {
         await generateAiQuiz(job.id, applicant.id, topic);
         setLoading(false);
         setIsModalOpen(false);
-        //window.location.reload();
     }
 
     const handleLogout = async () => {
